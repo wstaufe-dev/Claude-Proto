@@ -74,7 +74,9 @@ export class DebugPanel {
 
     this.el.append(h('Last round'));
     this.last = document.createElement('pre');
-    this.el.append(this.last, btn('Download transcript (JSON)', () => this.download()));
+    this.el.append(this.last);
+    // Hosted pages can't download files, so the artifact build leaves this out.
+    if (!import.meta.env.VITE_NO_DOWNLOADS) this.el.append(btn('Download transcript (JSON)', () => this.download()));
     this.render();
   }
 

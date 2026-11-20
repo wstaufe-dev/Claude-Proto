@@ -24,6 +24,7 @@ ${css}
 <div id="stage"></div>
 <button id="debug-toggle" title="Debug panel (D)" aria-label="Debug panel">&#9881;</button>
 <aside id="debug" hidden></aside>
+<script src="https://cdn.jsdelivr.net/npm/pixi.js@8.22.0/dist/pixi.min.js"></script>
 <script type="module">
 ${js}
 </script>
