@@ -71,7 +71,7 @@ function charTile(ch: string, top: number, bottom: number): Container {
   for (const [x, y] of [[pad + 14, pad + 14], [W - pad - 14, pad + 14], [pad + 14, H - pad - 14], [W - pad - 14, H - pad - 14]]) {
     g.circle(x, y, 5).fill(C.gold).circle(x, y, 2).fill(bottom);
   }
-  c.addChild(g, center(goldText(ch, 78, FONT_CN, '700'), W / 2, H / 2 + 2));
+  c.addChild(g, center(goldText(ch, 72, FONT_CN, '700'), W / 2, H / 2 + 2));
   return c;
 }
 
@@ -112,7 +112,7 @@ function wild(): Container {
 function scatter(): Container {
   // Red envelope
   const c = new Container();
-  const x = 34, y = 8, w = W - 68, h = H - 16;
+  const x = W * 0.22, y = 8, w = W * 0.56, h = H - 16;
   const g = new Graphics()
     .roundRect(x, y, w, h, 10).fill(vgrad([[0, 0xe63a3a], [1, 0x8e0f17]]))
     .roundRect(x, y, w, h, 10).stroke({ width: 3, color: C.gold })

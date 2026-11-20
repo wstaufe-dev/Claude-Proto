@@ -53,7 +53,9 @@ git). Results are reproducible for a given `(seed, workers, rounds)`.
 
 ## Playable game
 
-The game in `web/` is an original East Asian theme ("Golden Fortune") made of
+The game in `web/` is an original East Asian theme ("Golden Fortune"), laid out in
+portrait (720 × 1280 design size): jackpot meters at the top, a collection pot
+above the reels that money-ball sparks fly into, and the reels at the bottom. It is made of
 placeholder art drawn in code: 福 禄 寿 喜 tiles, A–10 ranks, a WILD plate,
 a red-envelope BONUS scatter, and cash coins.
 
@@ -66,7 +68,7 @@ Any symbol you leave out keeps its placeholder.
   "jackpotCoins": { "Major": "symbols/major.png" }, "emptyCell": "symbols/empty.png" }
 ```
 
-Images are cell-sized (150 × 118 design pixels) and are referenced relative to
+Images are cell-sized (136 × 112 design pixels) and are referenced relative to
 `web/public/assets/`.
 
 **Debug panel** (⚙ or the D key). Each scenario sets up the next spin; the

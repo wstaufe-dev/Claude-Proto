@@ -8,6 +8,9 @@ import type { Anim } from '../view/anim.ts';
 import type { Background, Banner, Hud, MessageBar, Meters } from '../view/chrome.ts';
 import type { GridView } from '../view/GridView.ts';
 import type { HnsView } from '../view/HnsView.ts';
+import type { Particles } from '../view/Particles.ts';
+import type { Pot } from '../view/Pot.ts';
+import { CELL_H, CELL_W, GRID_X, GRID_Y, ROWS } from '../art/theme.ts';
 
 export interface Views {
   background: Background;
@@ -17,6 +20,8 @@ export interface Views {
   message: MessageBar;
   banner: Banner;
   hud: Hud;
+  pot: Pot;
+  particles: Particles;
 }
 
 export class Presenter {
@@ -47,7 +52,20 @@ export class Presenter {
         case 'spin': {
           if (e.mode === 'base') { baseStops = e.stops; baseMb = e.mbPrizes; }
           else v.message.set(`FREE GAME ${e.freeGame} OF ${fgTotal}`);
-          await v.grid.spin(e.stops, e.grid, e.mbPrizes, this.t);
+          // In the base game, each coin that lands sends sparks up into the pot as its reel stops.
+          const flights: Promise<void>[] = [];
+          const onReelStop = e.mode === 'base' && e.mbPrizes.length
+            ? (reel: number) => {
+              for (const m of e.mbPrizes) {
+                if (Math.floor(m.cell / ROWS) !== reel) continue;
+                const from = { x: GRID_X + reel * CELL_W + CELL_W / 2, y: GRID_Y + (m.cell % ROWS) * CELL_H + CELL_H / 2 };
+                void v.grid.pulse([m.cell], 350);
+                flights.push(v.particles.burst(from, v.pot.target, () => v.pot.absorb(), { turbo: this.t }));
+              }
+            }
+            : undefined;
+          await v.grid.spin(e.stops, e.grid, e.mbPrizes, this.t, onReelStop);
+          await Promise.all(flights);
           if (e.lineWins.length) {
             addWin(e.lineTotal);
             if (e.mode === 'base') v.message.set(`WIN ${credits(e.lineTotal)}`);

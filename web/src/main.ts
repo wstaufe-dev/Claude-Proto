@@ -13,6 +13,8 @@ import { Anim } from './view/anim.ts';
 import { Background, Banner, Hud, MessageBar, Meters, Title } from './view/chrome.ts';
 import { GridView } from './view/GridView.ts';
 import { HnsView } from './view/HnsView.ts';
+import { Particles } from './view/Particles.ts';
+import { glowTexture, Pot } from './view/Pot.ts';
 
 /** Credits added by Cash In, and loaded into the machine at start. */
 const CASH_IN = 5_000;
@@ -39,7 +41,10 @@ fit();
 const anim = new Anim(app.ticker);
 const art = await createSymbolArt(app.renderer);
 
-const background = new Background();
+const background = new Background(anim);
+const glow = glowTexture(app.renderer);
+const pot = new Pot(glow, anim);
+const particles = new Particles(glow, anim);
 const grid = new GridView(cfg, art, anim);
 const hns = new HnsView(cfg, art, anim);
 grid.position.set(GRID_X, GRID_Y);
@@ -48,7 +53,7 @@ const meters = new Meters(cfg.jackpots.map((j) => j.name), anim);
 const message = new MessageBar();
 const banner = new Banner(anim);
 const hud = new Hud(cfg.bet);
-root.addChild(background, new Title(), meters, grid, hns, message, hud, banner);
+root.addChild(background, new Title(), meters, pot, grid, hns, particles, message, hud, banner);
 
 // Display-only starting position (not an outcome).
 grid.snapTo(cfg.baseReels.map((s) => Math.floor(Math.random() * s.length)));
@@ -56,7 +61,7 @@ meters.show(state.meters);
 hud.setBalance(state.credits);
 message.set('PRESS SPIN TO PLAY');
 
-const presenter = new Presenter(cfg, { background, grid, hns, meters, message, banner, hud }, anim);
+const presenter = new Presenter(cfg, { background, grid, hns, meters, message, banner, hud, pot, particles }, anim);
 
 let forced: Scenario | null = null;
 let forcedTable: number | undefined;

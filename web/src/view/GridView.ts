@@ -75,7 +75,7 @@ export class GridView extends Container {
   }
 
   /** Spin all reels to `stops`. Adds anticipation when the scatter could still trigger. */
-  async spin(stops: number[], grid: number[], mbPrizes: MbLanding[], turbo: boolean) {
+  async spin(stops: number[], grid: number[], mbPrizes: MbLanding[], turbo: boolean, onReelStop?: (reel: number) => void) {
     this.clearWins();
     const labels = this.landedLabels(mbPrizes);
     const need = this.cfg.fgTriggerCount;
@@ -89,7 +89,8 @@ export class GridView extends Container {
       const anticipate = !turbo && scatterBefore(r) >= need - 1;
       if (anticipate) extra += 22;
       const distance = (turbo ? 6 : 12) + r * (turbo ? 2 : 5) + extra;
-      return reel.spinTo(stops[r], labels[r], r * (turbo ? 20 : 70), distance, anticipate ? () => this.showGlow(r) : undefined);
+      return reel.spinTo(stops[r], labels[r], r * (turbo ? 20 : 70), distance, anticipate ? () => this.showGlow(r) : undefined)
+        .then(() => onReelStop?.(r));
     });
     await Promise.all(spins);
     this.glow.clear();

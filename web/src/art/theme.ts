@@ -1,15 +1,19 @@
-/** Layout and palette. Design resolution is 1280 × 720; the stage scales to fit. */
-export const DESIGN_W = 1280;
-export const DESIGN_H = 720;
+/** Layout and palette. Portrait design resolution 720 × 1280; the stage scales to fit. */
+export const DESIGN_W = 720;
+export const DESIGN_H = 1280;
 
-export const CELL_W = 150;
-export const CELL_H = 118;
+export const CELL_W = 136;
+export const CELL_H = 112;
 export const REELS = 5;
 export const ROWS = 3;
 export const GRID_W = CELL_W * REELS;
 export const GRID_H = CELL_H * ROWS;
 export const GRID_X = (DESIGN_W - GRID_W) / 2;
-export const GRID_Y = 168;
+export const GRID_Y = 784;
+
+/** The collection pot sits just above the reels, below open space under the meters. */
+export const POT_X = DESIGN_W / 2;
+export const POT_Y = 668;
 
 export const C = {
   bgTop: 0x5a0f12,
