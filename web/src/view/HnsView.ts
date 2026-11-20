@@ -63,7 +63,8 @@ export class HnsView extends Container {
   /** Clears the board for a new Hold & Spin using MB table `mbTable`. */
   reset(mbTable: number) {
     this.prizeTable = this.cfg.mbTables[mbTable].prizes;
-    const n = this.cfg.hnsReel.length;
+    // Open positions start on a non-MB stop: a coin there would look like one that has landed.
+    const blanks = this.cfg.hnsReel.flatMap((sym, i) => (sym === this.cfg.money ? [] : [i]));
     for (const s of this.slots) {
       s.locked = false;
       s.coin.visible = false;
@@ -72,7 +73,7 @@ export class HnsView extends Container {
       s.alpha = 1;
       s.reel.visible = true;
       // Display-only starting position; each respin lands where the engine says.
-      s.reel.setStrip(this.cfg.hnsReel, Math.floor(Math.random() * n));
+      s.reel.setStrip(this.cfg.hnsReel, blanks[Math.floor(Math.random() * blanks.length)]);
     }
   }
 

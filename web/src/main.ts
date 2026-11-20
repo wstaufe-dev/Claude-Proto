@@ -2,7 +2,7 @@ import { Application, Container } from 'pixi.js';
 import raw from '../../math/proto_v2.config.json';
 import {
   cashIn, cashOut, createState, CryptoRandom, loadConfig, playRound, SeededRandom, settleRound,
-  type RandomSource, type RawConfig, type RoundOptions,
+  type RandomSource, type RawConfig, type RoundOptions, type RoundResult,
 } from '../../src/engine/index.ts';
 import { createSymbolArt } from './art/symbols.ts';
 import { DESIGN_H, DESIGN_W, GRID_X, GRID_Y, money, setDenomination } from './art/theme.ts';
@@ -65,8 +65,11 @@ message.set('PRESS SPIN TO PLAY');
 
 /** Set while Hold & Spin is waiting for the player to press SPIN. */
 let spinWaiter: (() => void) | null = null;
+/** When the current SPIN prompt appeared (taps just after it are leftover skip taps, not a respin). */
+let promptAt = 0;
 const waitForSpin = (prompt: string) => new Promise<void>((resolve) => {
   anim.skipping = false; // a skip earlier in the round doesn't carry into the respins
+  promptAt = performance.now();
   message.set(prompt);
   hud.setSpinState('ready');
   spinWaiter = () => {
@@ -98,7 +101,11 @@ function refreshSpin() {
 refreshSpin();
 
 async function spin() {
-  if (spinWaiter) { spinWaiter(); return; }
+  if (spinWaiter) {
+    if (performance.now() - promptAt < 400) return; // ignore a double-tap that was meant as SKIP
+    spinWaiter();
+    return;
+  }
   if (busy) { anim.skipping = true; return; }
   if (state.credits < cfg.bet) { message.set(state.credits === 0 ? 'PRESS CASH IN TO PLAY' : 'INSUFFICIENT CREDITS'); return; }
 
@@ -112,6 +119,7 @@ async function spin() {
   }
 
   const result = playRound(cfg, state, rng, opts);
+  current = result;
   busy = true;
   refreshSpin();
   hud.setBalance(state.credits);
@@ -151,4 +159,5 @@ window.addEventListener('keydown', (e) => {
 });
 
 // For debugging in the console.
-Object.assign(window, { game: { cfg, state, waitingForSpin: () => spinWaiter !== null } });
+let current: RoundResult | null = null;
+Object.assign(window, { game: { cfg, state, waitingForSpin: () => spinWaiter !== null, currentRound: () => current } });
