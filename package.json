@@ -11,7 +11,8 @@
     "export-config": "tsx tools/export-config.ts",
     "sim": "tsx src/sim/cli.ts",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build:artifact": "vite build -c vite.artifact.config.ts && node tools/build-artifact.mjs"
   },
   "devDependencies": {
     "@types/node": "22.20.5",
