@@ -8,8 +8,8 @@ amounts are in credits (cr).
 
 - 5 reels × 3 rows, 25 fixed paylines (`Lines` table; row 0 is the top).
 - Fixed bet: **80 cr** per paid spin (`Setting: Bet`).
-- The `Pays` table gives line and scatter awards in credits at the 80 cr bet.
-  *(Assumption: to be confirmed.)*
+- There is no credits-per-line multiplier. Each winning line pays its `Pays`
+  table value in credits, and scatter awards are also paid in credits.
 
 ## 2. Symbols
 
@@ -81,6 +81,9 @@ them MB):
 |---|---|
 | Unweighted | 7 / 97 ≈ 7.2% |
 | Weighted | 7 / 90 007 ≈ 0.008% |
+
+The weighted position is a deliberate pacing control: on each respin, one
+open position almost never fills.
 
 ## 6. Jackpots
 
