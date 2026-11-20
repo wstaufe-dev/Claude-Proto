@@ -1,7 +1,7 @@
 {
   "source": {
     "file": "Proto_v2.xlsx",
-    "sha256": "572701b2297e3b499fd742b33387eb40d725afd39cf81563cb629a6cbaee2c7c"
+    "sha256": "bdf7767ea39e79fac7b18b980e10cba5ae78cf1673ff7a06218e830ecd92d179"
   },
   "symbols": [
     "M1",
@@ -1506,36 +1506,44 @@
       "name": "Mid",
       "rows": [
         {
+          "entry": 40,
+          "weight": 1384
+        },
+        {
+          "entry": 80,
+          "weight": 274
+        },
+        {
+          "entry": 160,
+          "weight": 76
+        },
+        {
+          "entry": 240,
+          "weight": 28
+        },
+        {
+          "entry": 320,
+          "weight": 31
+        },
+        {
           "entry": 400,
-          "weight": 1148
+          "weight": 104
         },
         {
           "entry": 800,
-          "weight": 530
+          "weight": 59
         },
         {
           "entry": 1200,
-          "weight": 245
+          "weight": 4
         },
         {
           "entry": 1600,
-          "weight": 113
-        },
-        {
-          "entry": 2000,
-          "weight": 52
+          "weight": 7
         },
         {
           "entry": 4000,
-          "weight": 24
-        },
-        {
-          "entry": 8000,
-          "weight": 11
-        },
-        {
-          "entry": 12000,
-          "weight": 5
+          "weight": 161
         },
         {
           "entry": "Mini",
@@ -1555,32 +1563,44 @@
       "name": "High",
       "rows": [
         {
-          "entry": 2000,
-          "weight": 1244
+          "entry": 40,
+          "weight": 889
+        },
+        {
+          "entry": 80,
+          "weight": 180
+        },
+        {
+          "entry": 160,
+          "weight": 52
+        },
+        {
+          "entry": 240,
+          "weight": 20
+        },
+        {
+          "entry": 320,
+          "weight": 23
+        },
+        {
+          "entry": 400,
+          "weight": 81
+        },
+        {
+          "entry": 800,
+          "weight": 56
+        },
+        {
+          "entry": 1200,
+          "weight": 5
+        },
+        {
+          "entry": 1600,
+          "weight": 10
         },
         {
           "entry": 4000,
-          "weight": 518
-        },
-        {
-          "entry": 8000,
-          "weight": 216
-        },
-        {
-          "entry": 12000,
-          "weight": 90
-        },
-        {
-          "entry": 16000,
-          "weight": 37
-        },
-        {
-          "entry": 20000,
-          "weight": 16
-        },
-        {
-          "entry": 40000,
-          "weight": 7
+          "weight": 812
         },
         {
           "entry": "Mini",

@@ -91,15 +91,28 @@ open position almost never fills.
 
 ### MB tables
 
-| Table | Credit values | Average credit value | Draw weight |
-|---|---|---|---|
-| Low | 40 – 4 000 | 80 cr | 85 |
-| Mid | 400 – 12 000 | 802 cr (≈ 10× Low) | 10 |
-| High | 2 000 – 40 000 | 4 023 cr (≈ 50× Low) | 5 |
+All three tables have the same entries as Low: credit values 40, 80, 160,
+240, 320, 400, 800, 1 200, 1 600 and 4 000, plus Mini, Minor and Major. Only
+the weights differ.
 
-Each table also contains Mini (weight 10), Minor (3) and Major (1). Every
-table's credit weights total 2 128, so the chance of drawing a jackpot is the
-same in all three: 14 in 2 142 per MB.
+| Credits | Low | Mid | High |
+|---|---|---|---|
+| 40 | 1 600 | 1 384 | 889 |
+| 80 | 300 | 274 | 180 |
+| 160 | 75 | 76 | 52 |
+| 240 | 25 | 28 | 20 |
+| 320 | 25 | 31 | 23 |
+| 400 | 75 | 104 | 81 |
+| 800 | 25 | 59 | 56 |
+| 1 200 | 1 | 4 | 5 |
+| 1 600 | 1 | 7 | 10 |
+| 4 000 | 1 | 161 | 812 |
+| Mini / Minor / Major | 10 / 3 / 1 | 10 / 3 / 1 | 10 / 3 / 1 |
+| **Average credit value** | **80 cr** | **402 cr (5.0×)** | **1 606 cr (20.0×)** |
+| **Draw weight** | **85** | **10** | **5** |
+
+Every table's credit weights total 2 128, so the chance of drawing a jackpot
+is the same in all three: 14 in 2 142 per MB.
 
 ## 6. Jackpots
 

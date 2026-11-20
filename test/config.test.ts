@@ -36,15 +36,18 @@ describe('loadConfig on the exported workbook', () => {
     }
   });
 
-  it('averages Mid ≈ 10× and High ≈ 50× the Low credit value', () => {
+  it('averages Mid ≈ 5× and High ≈ 20× the Low credit value, using the Low values', () => {
     const avgCredits = (i: number) => {
       const t = cfg.mbTables[i].prizes;
       let sum = 0, w = 0;
       t.items.forEach((p, k) => { if (p.kind === 'credits') { sum += p.credits * t.weights[k]; w += t.weights[k]; } });
       return sum / w;
     };
-    expect(avgCredits(1) / avgCredits(0)).toBeCloseTo(10, 1);
-    expect(avgCredits(2) / avgCredits(0)).toBeCloseTo(50, 0);
+    expect(avgCredits(1) / avgCredits(0)).toBeCloseTo(5, 1);
+    expect(avgCredits(2) / avgCredits(0)).toBeCloseTo(20, 1);
+    const values = (i: number) => cfg.mbTables[i].prizes.items.map((p) => JSON.stringify(p));
+    expect(values(1)).toEqual(values(0));
+    expect(values(2)).toEqual(values(0));
   });
 
   it('draws Low/Mid/High 85/10/5', () => {
