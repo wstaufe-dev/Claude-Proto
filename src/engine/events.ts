@@ -16,6 +16,12 @@ export interface Lock {
   amount: number;
 }
 
+/** An MB on the reels with the prize it carries. */
+export interface MbLanding {
+  cell: number;
+  prize: MbPrize;
+}
+
 export interface SpinEvent {
   type: 'spin';
   mode: Mode;
@@ -31,6 +37,8 @@ export interface SpinEvent {
   scatterPay: number;
   freeGamesAwarded: number;
   mbCount: number;
+  /** Value drawn for each MB that landed (shown on the coin; paid only if Hold & Spin triggers). */
+  mbPrizes: MbLanding[];
   /** Set when this spin starts Hold & Spin. */
   hnsTrigger: HnsTrigger | null;
 }

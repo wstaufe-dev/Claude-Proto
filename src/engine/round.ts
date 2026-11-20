@@ -6,9 +6,9 @@
  * settleRound() later credits that win. Both the playable game and the
  * simulator go through these two calls only.
  */
-import type { GameConfig } from './config.ts';
+import type { GameConfig, MbPrize } from './config.ts';
 import { cellsWith, countSymbol, evaluateLines, windowFor } from './evaluate.ts';
-import type { GameEvent, HnsTrigger, Lock, Mode, RoundResult, SpinEvent, WinBreakdown } from './events.ts';
+import type { GameEvent, HnsTrigger, Lock, MbLanding, Mode, RoundResult, SpinEvent, WinBreakdown } from './events.ts';
 import { randInt, type RandomSource } from './rng.ts';
 import { jackpotValue, type EngineState } from './state.ts';
 
@@ -68,7 +68,7 @@ export function playRound(cfg: GameConfig, state: EngineState, src: RandomSource
   const base = spin(ctx, 'base', 0, opts.forceBaseStops);
   ctx.breakdown.baseLines += base.lineTotal;
   ctx.breakdown.baseScatter += base.scatterPay;
-  if (base.hnsTrigger) holdAndSpin(ctx, 'base', base.hnsTrigger, base.grid);
+  if (base.hnsTrigger) holdAndSpin(ctx, 'base', base.hnsTrigger, base.mbPrizes);
   if (base.freeGamesAwarded > 0) freeGames(ctx, base.freeGamesAwarded);
 
   let totalWin = 0;
@@ -120,14 +120,18 @@ function spin(ctx: Ctx, mode: Mode, freeGame: number, forcedStops?: number[]): S
   const scatterPay = cfg.scatterPay[scatterCount];
   const freeGamesAwarded = scatterCount >= cfg.fgTriggerCount ? (mode === 'base' ? cfg.fgAward : cfg.fgRetriggerAward) : 0;
 
-  const mbCount = countSymbol(grid, cfg.money);
+  // Every MB that lands gets its value now, from the round's MB table, so it can be shown on the coin.
+  // It is paid only if Hold & Spin triggers (and then locks with this same value).
+  const prizeTable = cfg.mbTables[ctx.mbTable].prizes;
+  const mbPrizes = cellsWith(grid, cfg.money).map((cell) => ({ cell, prize: prizeTable.pick(src) }));
+  const mbCount = mbPrizes.length;
   let hnsTrigger: HnsTrigger | null = null;
   if (mbCount >= cfg.hnsAutoTrigger) hnsTrigger = 'auto';
   else if (mbCount > 0 && randInt(src, cfg.hnsTriggerTotal[mbCount]) < cfg.hnsTriggerYes[mbCount]) hnsTrigger = 'draw';
 
   const event: SpinEvent = {
     type: 'spin', mode, freeGame, mbTable: ctx.mbTable, stops, grid, lineWins, lineTotal,
-    scatterCount, scatterPay, freeGamesAwarded, mbCount, hnsTrigger,
+    scatterCount, scatterPay, freeGamesAwarded, mbCount, mbPrizes, hnsTrigger,
   };
   ctx.events.push(event);
   return event;
@@ -146,13 +150,13 @@ function freeGames(ctx: Ctx, awarded: number): void {
     ctx.breakdown.freeScatter += fs.scatterPay;
     total += fs.lineTotal + fs.scatterPay;
     remaining += fs.freeGamesAwarded;
-    if (fs.hnsTrigger) total += holdAndSpin(ctx, 'free', fs.hnsTrigger, fs.grid);
+    if (fs.hnsTrigger) total += holdAndSpin(ctx, 'free', fs.hnsTrigger, fs.mbPrizes);
   }
   ctx.events.push({ type: 'freeGamesEnd', gamesPlayed: played, total });
 }
 
 /** Plays Hold & Spin to completion. Returns its total award. */
-function holdAndSpin(ctx: Ctx, mode: Mode, trigger: HnsTrigger, grid: number[]): number {
+function holdAndSpin(ctx: Ctx, mode: Mode, trigger: HnsTrigger, landed: MbLanding[]): number {
   const { cfg, src } = ctx;
   const cells = cfg.reels * cfg.rows;
   const locked = new Array<boolean>(cells).fill(false);
@@ -161,8 +165,7 @@ function holdAndSpin(ctx: Ctx, mode: Mode, trigger: HnsTrigger, grid: number[]):
   let creditTotal = 0;
   let jackpotTotal = 0;
 
-  const lock = (cell: number): Lock => {
-    const prize = prizes.pick(src);
+  const lock = (cell: number, prize: MbPrize = prizes.pick(src)): Lock => {
     const amount = prize.kind === 'credits' ? prize.credits : awardJackpot(ctx, prize.jackpot);
     if (prize.kind === 'credits') creditTotal += amount;
     else jackpotTotal += amount;
@@ -172,7 +175,7 @@ function holdAndSpin(ctx: Ctx, mode: Mode, trigger: HnsTrigger, grid: number[]):
     return l;
   };
 
-  const initial = cellsWith(grid, cfg.money).map(lock);
+  const initial = landed.map((m) => lock(m.cell, m.prize));
   let respins = cfg.hnsRespins;
   ctx.events.push({ type: 'hnsStart', mode, trigger, mbTable: ctx.mbTable, locks: initial, respins, meters: ctx.state.meters.slice() });
 

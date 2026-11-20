@@ -1,7 +1,7 @@
 import { Application, Container } from 'pixi.js';
 import raw from '../../math/proto_v2.config.json';
 import {
-  createState, CryptoRandom, loadConfig, playRound, SeededRandom, settleRound,
+  cashIn, cashOut, createState, CryptoRandom, loadConfig, playRound, SeededRandom, settleRound,
   type RandomSource, type RawConfig, type RoundOptions,
 } from '../../src/engine/index.ts';
 import { createSymbolArt } from './art/symbols.ts';
@@ -14,10 +14,12 @@ import { Background, Banner, Hud, MessageBar, Meters, Title } from './view/chrom
 import { GridView } from './view/GridView.ts';
 import { HnsView } from './view/HnsView.ts';
 
-const START_CREDITS = 20_000;
+/** Credits added by Cash In, and loaded into the machine at start. */
+const CASH_IN = 5_000;
 
 const cfg = loadConfig(raw as RawConfig);
-const state = createState(cfg, START_CREDITS);
+const state = createState(cfg, 0);
+cashIn(state, CASH_IN);
 let rng: RandomSource = new CryptoRandom();
 
 const app = new Application();
@@ -71,11 +73,13 @@ const panel = new DebugPanel(cfg, {
 
 function refreshSpin() {
   hud.setSpinState(busy ? 'busy' : state.credits >= cfg.bet ? 'ready' : 'disabled');
+  hud.setCashEnabled(!busy);
 }
+refreshSpin();
 
 async function spin() {
   if (busy) { anim.skipping = true; return; }
-  if (state.credits < cfg.bet) { message.set('INSUFFICIENT CREDITS'); return; }
+  if (state.credits < cfg.bet) { message.set(state.credits === 0 ? 'PRESS CASH IN TO PLAY' : 'INSUFFICIENT CREDITS'); return; }
 
   const opts: RoundOptions = { forceMbTable: forcedTable };
   if (forced) {
@@ -104,6 +108,23 @@ async function spin() {
 }
 
 hud.spinButton.on('pointertap', () => void spin());
+hud.cashInButton.on('pointertap', () => {
+  if (busy) return;
+  cashIn(state, CASH_IN);
+  hud.setBalance(state.credits);
+  hud.setWin(0);
+  message.set(`CASHED IN ${CASH_IN.toLocaleString('en-US')}`);
+  refreshSpin();
+});
+hud.cashOutButton.on('pointertap', async () => {
+  if (busy || state.credits === 0) return;
+  const amount = cashOut(state);
+  hud.setBalance(0);
+  hud.setWin(0);
+  refreshSpin();
+  await banner.countUp('CASHED OUT', amount, 1200);
+  message.set('PRESS CASH IN TO PLAY');
+});
 window.addEventListener('keydown', (e) => {
   if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); void spin(); }
 });

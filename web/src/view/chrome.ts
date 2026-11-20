@@ -155,6 +155,8 @@ export class Hud extends Container {
   private readonly balance: Text;
   private readonly win: Text;
   readonly spinButton = new Container();
+  readonly cashInButton: Container;
+  readonly cashOutButton: Container;
   private readonly spinFace = new Graphics();
   private readonly spinLabel: Text;
 
@@ -184,6 +186,21 @@ export class Hud extends Container {
     this.setSpinState('ready');
     this.addChild(this.spinButton);
 
+    const pill = (label: string, cy: number) => {
+      const b = new Container();
+      const g = new Graphics().roundRect(-62, -14, 124, 28, 14).fill(vgrad(0x4a1a12, 0x2a0a08)).roundRect(-62, -14, 124, 28, 14).stroke({ width: 2, color: C.gold });
+      const t = new Text({ text: label, style: { fontFamily: FONT_UI, fontSize: 13, fontWeight: '800', fill: C.goldLight, letterSpacing: 1.5 } });
+      t.anchor.set(0.5);
+      b.addChild(g, t);
+      b.position.set(985, cy);
+      b.eventMode = 'static';
+      b.cursor = 'pointer';
+      this.addChild(b);
+      return b;
+    };
+    this.cashInButton = pill('CASH IN', y + 19);
+    this.cashOutButton = pill('CASH OUT', y + 53);
+
     const cn = new Text({ text: '福', style: { ...goldStyle(34, FONT_CN) } });
     cn.anchor.set(0.5);
     cn.position.set(92, y + 36);
@@ -191,6 +208,10 @@ export class Hud extends Container {
   }
 
   setBalance(n: number) { this.balance.text = credits(n); }
+  /** Cash buttons work only between rounds. */
+  setCashEnabled(on: boolean) {
+    for (const b of [this.cashInButton, this.cashOutButton]) { b.alpha = on ? 1 : 0.4; b.eventMode = on ? 'static' : 'none'; }
+  }
   setWin(n: number) { this.win.text = n > 0 ? credits(n) : ''; }
 
   /** 'ready' = can spin, 'busy' = tap to speed up, 'disabled' = no credits. */

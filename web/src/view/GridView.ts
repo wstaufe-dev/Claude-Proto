@@ -1,10 +1,10 @@
 /** The 5 × 3 reel window: reels, win highlights, anticipation glow. */
-import { Container, Graphics, type Sprite } from 'pixi.js';
-import type { GameConfig, LineWin } from '../../../src/engine/index.ts';
+import { Container, Graphics } from 'pixi.js';
+import type { GameConfig, LineWin, MbLanding, MbPrize, WeightedTable } from '../../../src/engine/index.ts';
 import type { SymbolArt } from '../art/symbols.ts';
 import { C, CELL_H, CELL_W, GRID_H, GRID_W, REELS, ROWS } from '../art/theme.ts';
 import { easeInOutSine, type Anim } from './anim.ts';
-import { ReelView } from './ReelView.ts';
+import { ReelView, type CoinLabel, type ReelArt } from './ReelView.ts';
 
 export class GridView extends Container {
   readonly reels: ReelView[] = [];
@@ -12,15 +12,23 @@ export class GridView extends Container {
   private readonly glow = new Graphics();
   private readonly lineLayer = new Graphics();
   private stops: number[];
+  /** MB table used for cosmetic values on coins that scroll past. */
+  private prizeTable: WeightedTable<MbPrize>;
 
   constructor(private readonly cfg: GameConfig, private readonly art: SymbolArt, private readonly anim: Anim) {
     super();
     this.stops = cfg.baseReels.map(() => 0);
     this.drawBack(false);
     this.addChild(this.back, this.glow);
-    const tex = (s: number) => art.symbol(cfg.symbols[s]);
+    this.prizeTable = cfg.mbTables[0].prizes;
+    const reelArt: ReelArt = {
+      symbol: (s) => art.symbol(cfg.symbols[s]),
+      isMoney: (s) => s === cfg.money,
+      jackpotCoin: (n) => art.jackpotCoin(n),
+      randomLabel: () => this.toLabel(this.prizeTable.items[this.prizeTable.indexFor(Math.floor(Math.random() * this.prizeTable.total))]),
+    };
     for (let r = 0; r < REELS; r++) {
-      const reel = new ReelView(cfg.baseReels[r], tex, anim);
+      const reel = new ReelView(cfg.baseReels[r], reelArt, anim);
       reel.x = r * CELL_W;
       const mask = new Graphics().rect(r * CELL_W, 0, CELL_W, GRID_H).fill(0xffffff);
       reel.mask = mask;
@@ -38,19 +46,38 @@ export class GridView extends Container {
     for (let r = 1; r < REELS; r++) g.moveTo(r * CELL_W, 0).lineTo(r * CELL_W, GRID_H).stroke({ width: 1, color: C.goldDark, alpha: 0.5 });
   }
 
-  setMode(mode: 'base' | 'free') {
+  /** Which MB table the current round uses (for cosmetic coin values). */
+  setMbTable(index: number) {
+    this.prizeTable = this.cfg.mbTables[index].prizes;
+  }
+
+  private toLabel(p: MbPrize): CoinLabel {
+    return p.kind === 'credits' ? { credits: p.credits } : { jackpot: this.cfg.jackpots[p.jackpot].name };
+  }
+
+  /** Coin labels for each reel's three visible rows (null where there is no MB). */
+  private landedLabels(mbPrizes: MbLanding[]): (CoinLabel | null)[][] {
+    const out = this.reels.map(() => new Array<CoinLabel | null>(ROWS).fill(null));
+    for (const m of mbPrizes) out[Math.floor(m.cell / ROWS)][m.cell % ROWS] = this.toLabel(m.prize);
+    return out;
+  }
+
+  setMode(mode: 'base' | 'free', stops = this.stops, mbPrizes: MbLanding[] = []) {
     const strips = mode === 'base' ? this.cfg.baseReels : this.cfg.fgReels;
-    this.reels.forEach((reel, r) => reel.setStrip(strips[r], this.stops[r] % strips[r].length));
+    const labels = this.landedLabels(mbPrizes);
+    this.reels.forEach((reel, r) => reel.setStrip(strips[r], stops[r] % strips[r].length, labels[r]));
+    this.stops = stops.slice();
     this.drawBack(mode === 'free');
   }
 
-  spriteAt(cell: number): Sprite {
+  spriteAt(cell: number): Container {
     return this.reels[Math.floor(cell / ROWS)].spriteAt(cell % ROWS);
   }
 
   /** Spin all reels to `stops`. Adds anticipation when the scatter could still trigger. */
-  async spin(stops: number[], grid: number[], turbo: boolean) {
+  async spin(stops: number[], grid: number[], mbPrizes: MbLanding[], turbo: boolean) {
     this.clearWins();
+    const labels = this.landedLabels(mbPrizes);
     const need = this.cfg.fgTriggerCount;
     const scatterBefore = (reel: number) => {
       let n = 0;
@@ -62,15 +89,16 @@ export class GridView extends Container {
       const anticipate = !turbo && scatterBefore(r) >= need - 1;
       if (anticipate) extra += 22;
       const distance = (turbo ? 6 : 12) + r * (turbo ? 2 : 5) + extra;
-      return reel.spinTo(stops[r], r * (turbo ? 20 : 70), distance, anticipate ? () => this.showGlow(r) : undefined);
+      return reel.spinTo(stops[r], labels[r], r * (turbo ? 20 : 70), distance, anticipate ? () => this.showGlow(r) : undefined);
     });
     await Promise.all(spins);
     this.glow.clear();
     this.stops = stops.slice();
   }
 
-  snapTo(stops: number[]) {
-    this.reels.forEach((reel, r) => reel.snap(stops[r]));
+  snapTo(stops: number[], mbPrizes?: MbLanding[]) {
+    const labels = mbPrizes ? this.landedLabels(mbPrizes) : null;
+    this.reels.forEach((reel, r) => reel.snap(stops[r], labels?.[r]));
     this.stops = stops.slice();
     this.glow.clear();
   }

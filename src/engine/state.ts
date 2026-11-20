@@ -28,3 +28,18 @@ export function createState(cfg: GameConfig, credits = 0): EngineState {
 export function jackpotValue(state: EngineState, jackpot: number): number {
   return Math.floor(state.meters[jackpot] / 100);
 }
+
+/** Adds credits to the machine. Not allowed while a round awaits settlement. */
+export function cashIn(state: EngineState, amount: number): void {
+  if (!Number.isInteger(amount) || amount <= 0) throw new RangeError(`Cash in must be a positive whole number of credits (got ${amount})`);
+  if (state.pendingRound !== null) throw new Error('Cannot cash in during a round');
+  state.credits += amount;
+}
+
+/** Removes the whole balance and returns it. Not allowed while a round awaits settlement. */
+export function cashOut(state: EngineState): number {
+  if (state.pendingRound !== null) throw new Error('Cannot cash out during a round');
+  const amount = state.credits;
+  state.credits = 0;
+  return amount;
+}

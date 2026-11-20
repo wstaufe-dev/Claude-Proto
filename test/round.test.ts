@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  breakdownTotal, createState, playRound, SeededRandom, SettlementError, settleRound,
+  breakdownTotal, cashIn, cashOut, createState, playRound, SeededRandom, SettlementError, settleRound,
   type GameConfig, type GameEvent, type HnsRespinEvent,
 } from '../src/engine/index.ts';
 import { customConfig, realConfig } from './helpers.ts';
@@ -58,6 +58,47 @@ describe('wager, meters and settlement', () => {
     const a = play(cfg, 99).result;
     const b = play(cfg, 99).result;
     expect(JSON.stringify(a)).toBe(JSON.stringify(b));
+  });
+});
+
+describe('cash in and cash out', () => {
+  const cfg = realConfig();
+  it('adds and removes credits between rounds only', () => {
+    const state = createState(cfg, 0);
+    cashIn(state, 5000);
+    expect(state.credits).toBe(5000);
+    const r = playRound(cfg, state, new SeededRandom(1));
+    expect(() => cashIn(state, 5000)).toThrow(/during a round/);
+    expect(() => cashOut(state)).toThrow(/during a round/);
+    settleRound(state, r);
+    const out = cashOut(state);
+    expect(out).toBe(5000 - cfg.bet + r.totalWin);
+    expect(state.credits).toBe(0);
+    expect(() => cashIn(state, 0)).toThrow(RangeError);
+  });
+});
+
+describe('MB values', () => {
+  const cfg = realConfig();
+  it('draws a value for every landed MB and locks those same values when Hold & Spin starts', () => {
+    const state = createState(cfg, BIG);
+    const src = new SeededRandom(8);
+    let checked = 0;
+    for (let i = 0; i < 20_000; i++) {
+      const r = playRound(cfg, state, src);
+      settleRound(state, r);
+      let last: Extract<GameEvent, { type: 'spin' }> | null = null;
+      for (const e of r.events) {
+        if (e.type === 'spin') {
+          last = e;
+          expect(e.mbPrizes.map((m) => m.cell)).toEqual(e.grid.flatMap((s, c) => (s === cfg.money ? [c] : [])));
+        } else if (e.type === 'hnsStart') {
+          expect(e.locks.map((l) => ({ cell: l.cell, prize: l.prize }))).toEqual(last!.mbPrizes);
+          checked++;
+        }
+      }
+    }
+    expect(checked).toBeGreaterThan(100);
   });
 });
 

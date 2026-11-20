@@ -2,7 +2,7 @@
  * Presentation adapter. Animates a RoundResult's events in order and shows
  * only values carried by those events; it never recalculates an outcome.
  */
-import type { GameConfig, Lock, RoundResult } from '../../../src/engine/index.ts';
+import type { GameConfig, Lock, MbLanding, RoundResult } from '../../../src/engine/index.ts';
 import { credits } from '../art/theme.ts';
 import type { Anim } from '../view/anim.ts';
 import type { Background, Banner, Hud, MessageBar, Meters } from '../view/chrome.ts';
@@ -37,15 +37,17 @@ export class Presenter {
     let shown = 0;
     let fgTotal = 0;
     let baseStops: number[] = [];
+    let baseMb: MbLanding[] = [];
+    v.grid.setMbTable(result.mbTable);
     let locks: Lock[] = [];
     const addWin = (n: number) => { shown += n; v.hud.setWin(shown); };
 
     for (const e of result.events) {
       switch (e.type) {
         case 'spin': {
-          if (e.mode === 'base') baseStops = e.stops;
+          if (e.mode === 'base') { baseStops = e.stops; baseMb = e.mbPrizes; }
           else v.message.set(`FREE GAME ${e.freeGame} OF ${fgTotal}`);
-          await v.grid.spin(e.stops, e.grid, this.t);
+          await v.grid.spin(e.stops, e.grid, e.mbPrizes, this.t);
           if (e.lineWins.length) {
             addWin(e.lineTotal);
             if (e.mode === 'base') v.message.set(`WIN ${credits(e.lineTotal)}`);
@@ -68,14 +70,13 @@ export class Presenter {
           fgTotal = e.games;
           await v.banner.show('FREE GAMES', `${e.games} FREE GAMES`, this.t ? 500 : 1400);
           v.background.draw(true);
-          v.grid.setMode('free');
+          v.grid.setMode('free', baseStops, baseMb);
           break;
 
         case 'freeGamesEnd':
           await v.banner.countUp('FREE GAMES WIN', e.total, this.t ? 400 : 1500);
           v.background.draw(false);
-          v.grid.setMode('base');
-          v.grid.snapTo(baseStops);
+          v.grid.setMode('base', baseStops, baseMb);
           v.message.set('');
           break;
 

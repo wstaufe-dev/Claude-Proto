@@ -40,7 +40,10 @@ amounts are in credits (cr).
    - 1 ≤ N ≤ 5: one draw on the `HoldnSpin MB Trigger` table for N
      (Yes weight : No weight).
    - N = 15: the Grand is awarded (see §6).
-5. MB symbols pay nothing unless Hold & Spin triggers.
+5. **MB values:** every MB that lands, in the base game or free games, gets
+   its value at once: one draw from the round's MB table (a credit value,
+   Mini, Minor or Major). The value is shown on the coin. MB symbols pay
+   nothing unless Hold & Spin triggers.
 6. **Order of play** when both features trigger: Hold & Spin first, then free
    games.
 7. **Progressive contribution:** every paid spin adds 0.7% of the bet
@@ -59,9 +62,9 @@ amounts are in credits (cr).
 
 ## 5. Hold & Spin
 
-1. **Start:** the MBs that triggered the feature lock in place. Each locked MB
-   gets one draw from the round's MB table (`MBPay Low`, `Mid` or `High`), which can give a credit value, Mini,
-   Minor or Major.
+1. **Start:** the MBs that triggered the feature lock in place, keeping the
+   values they landed with. A jackpot shown on a triggering coin is paid at
+   its current meter value when the coin locks.
 2. **Respins:** the counter starts at 3.
 3. **Each respin:**
    - One unlocked position is picked uniformly at random. That position uses a

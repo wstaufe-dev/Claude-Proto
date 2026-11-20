@@ -12,7 +12,7 @@ import { C, CELL_H, CELL_W, FONT_CN, FONT_TITLE } from './theme.ts';
 export interface SymbolArt {
   /** Texture for a reel symbol by name (M1…F5, WW, SC1, MB). */
   symbol(name: string): Texture;
-  /** Money-ball coin without a label. */
+  /** Money-ball coin face (the value is drawn on top as text). */
   coin: Texture;
   /** Plain coin face that carries a credit value in Hold & Spin. */
   valueCoin: Texture;
@@ -126,18 +126,8 @@ function scatter(): Container {
 }
 
 function coin(): Container {
-  // Chinese cash coin: gold disc, inner rim, square hole
-  const c = new Container();
-  const r = 50;
-  const g = new Graphics()
-    .circle(W / 2, H / 2, r + 2).fill({ color: 0x000000, alpha: 0.35 })
-    .circle(W / 2, H / 2, r).fill(rgrad([[0, C.goldLight], [0.55, C.gold], [1, C.goldDark]]))
-    .circle(W / 2, H / 2, r).stroke({ width: 3, color: 0x6b4510 })
-    .circle(W / 2, H / 2, r - 9).stroke({ width: 2, color: 0x8a5a14, alpha: 0.8 })
-    .rect(W / 2 - 11, H / 2 - 11, 22, 22).fill(C.redDark)
-    .rect(W / 2 - 11, H / 2 - 11, 22, 22).stroke({ width: 3, color: 0x6b4510 });
-  c.addChild(g);
-  return c;
+  // Gold coin face with a dark centre, no hole, so a value reads cleanly on top of it.
+  return valueCoin();
 }
 
 function valueCoin(): Container {
