@@ -28,9 +28,28 @@ describe('loadConfig on the exported workbook', () => {
     expect(byName.Mini).toMatchObject({ progressive: false, resetCenti: 100_000, incrementCenti: 0 });
   });
 
-  it('has MB prizes including Mini/Minor/Major but not Grand', () => {
-    const jp = cfg.mbPrizes.items.filter((p) => p.kind === 'jackpot').map((p) => cfg.jackpots[(p as { jackpot: number }).jackpot].name);
-    expect(jp).toEqual(['Mini', 'Minor', 'Major']);
+  it('has Low/Mid/High MB tables with Mini/Minor/Major but not Grand', () => {
+    expect(cfg.mbTables.map((m) => m.name)).toEqual(['Low', 'Mid', 'High']);
+    for (const { prizes } of cfg.mbTables) {
+      const jp = prizes.items.filter((p) => p.kind === 'jackpot').map((p) => cfg.jackpots[(p as { jackpot: number }).jackpot].name);
+      expect(jp).toEqual(['Mini', 'Minor', 'Major']);
+    }
+  });
+
+  it('averages Mid ≈ 10× and High ≈ 50× the Low credit value', () => {
+    const avgCredits = (i: number) => {
+      const t = cfg.mbTables[i].prizes;
+      let sum = 0, w = 0;
+      t.items.forEach((p, k) => { if (p.kind === 'credits') { sum += p.credits * t.weights[k]; w += t.weights[k]; } });
+      return sum / w;
+    };
+    expect(avgCredits(1) / avgCredits(0)).toBeCloseTo(10, 1);
+    expect(avgCredits(2) / avgCredits(0)).toBeCloseTo(50, 0);
+  });
+
+  it('draws Low/Mid/High 85/10/5', () => {
+    expect(cfg.mbTableDraw.items.map((i) => cfg.mbTables[i].name)).toEqual(['Low', 'Mid', 'High']);
+    expect(cfg.mbTableDraw.weights).toEqual([85, 10, 5]);
   });
 });
 
@@ -56,8 +75,10 @@ describe('loadConfig validation', () => {
     ['line count mismatch', (r: any) => r.lines.pop(), /table has 24 lines/],
     ['zero weight', (r: any) => (r.hnsReel[0].weight = 0), /HoldnSpin Reel stop 1: weight/],
     ['missing pay row', (r: any) => r.pays.splice(0, 1), /no row for symbol M1/],
-    ['unknown MB jackpot', (r: any) => (r.mbTable[10].entry = 'Mega'), /unknown jackpot Mega/],
-    ['Grand in MB table', (r: any) => (r.mbTable[10].entry = 'Grand'), /Grand is awarded by a full screen/],
+    ['unknown MB jackpot', (r: any) => (r.mbTables[1].rows[8].entry = 'Mega'), /MBPay Mid row 9: unknown jackpot Mega/],
+    ['Grand in MB table', (r: any) => (r.mbTables[0].rows[10].entry = 'Grand'), /Grand is awarded by a full screen/],
+    ['unknown table in draw', (r: any) => (r.mbTableDraw[2].name = 'Ultra'), /unknown table Ultra/],
+    ['table missing from draw', (r: any) => r.mbTableDraw.pop(), /no row for table High/],
     ['missing trigger row', (r: any) => r.hnsTrigger.pop(), /no row for 5 MB/],
     ['missing setting', (r: any) => delete r.settings['HnS Respins'], /"HnS Respins"/],
     ['fractional increment', (r: any) => (r.jackpots[2].incrementPct = 0.7001), /not a whole centicredit/],

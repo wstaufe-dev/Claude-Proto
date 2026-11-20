@@ -20,7 +20,10 @@ export interface RawConfig {
   baseReels: string[][];
   fgReels: string[][];
   hnsReel: { symbol: string; weight: number }[];
-  mbTable: { entry: string | number; weight: number }[];
+  /** Money-ball prize tables (Low, Mid, High…), each a list of credit values or jackpot names with weights. */
+  mbTables: { name: string; rows: { entry: string | number; weight: number }[] }[];
+  /** Which MB table a base game spin uses. */
+  mbTableDraw: { name: string; weight: number }[];
   hnsTrigger: { count: number; yes: number; no: number }[];
   jackpots: { name: string; reset: number; incrementPct: number; type: JackpotType }[];
   settings: Record<string, number>;
@@ -29,6 +32,11 @@ export interface RawConfig {
 export type MbPrize =
   | { kind: 'credits'; credits: number }
   | { kind: 'jackpot'; jackpot: number /* index into GameConfig.jackpots */ };
+
+export interface MbTable {
+  name: string;
+  prizes: WeightedTable<MbPrize>;
+}
 
 export interface Jackpot {
   name: string;
@@ -59,7 +67,9 @@ export interface GameConfig {
   fgReels: number[][];
   hnsReel: number[];
   hnsReelWeights: WeightedTable<number>; // items are stop indices
-  mbPrizes: WeightedTable<MbPrize>;
+  mbTables: MbTable[];
+  /** Drawn at the start of each base game spin; items are indices into mbTables. */
+  mbTableDraw: WeightedTable<number>;
   /** hnsTriggerYes[n] / hnsTriggerTotal[n] = chance n MBs (1..auto-1) trigger Hold & Spin. */
   hnsTriggerYes: number[];
   hnsTriggerTotal: number[];
@@ -182,21 +192,41 @@ export function loadConfig(raw: RawConfig): GameConfig {
   });
   if (!(GRAND in jackpotIndex)) fail(`Jackpot: ${GRAND} missing`);
 
-  // MB prize table
-  const mbItems: MbPrize[] = [];
-  const mbWeights: number[] = [];
-  raw.mbTable.forEach(({ entry, weight }, i) => {
-    if (!isPosInt(weight)) fail(`MBPay row ${i + 1}: weight must be a positive integer (got ${weight})`);
-    if (typeof entry === 'number') {
-      if (!isPosInt(entry)) fail(`MBPay row ${i + 1}: credit value must be a positive integer (got ${entry})`);
-      mbItems.push({ kind: 'credits', credits: entry });
-    } else {
-      if (!(entry in jackpotIndex)) fail(`MBPay row ${i + 1}: unknown jackpot ${entry}`);
-      if (entry === GRAND) fail(`MBPay row ${i + 1}: ${GRAND} is awarded by a full screen, not drawn`);
-      mbItems.push({ kind: 'jackpot', jackpot: jackpotIndex[entry] ?? -1 });
-    }
-    mbWeights.push(weight);
+  // MB prize tables
+  const mbTableIndex: Record<string, number> = {};
+  if (raw.mbTables.length === 0) fail('MBPay: no money-ball tables');
+  const mbParsed = raw.mbTables.map(({ name, rows }, t) => {
+    const label = `MBPay ${name}`;
+    if (name in mbTableIndex) fail(`${label}: duplicate table name`);
+    mbTableIndex[name] = t;
+    if (rows.length === 0) fail(`${label}: table is empty`);
+    const items: MbPrize[] = [];
+    const weights: number[] = [];
+    rows.forEach(({ entry, weight }, i) => {
+      if (!isPosInt(weight)) fail(`${label} row ${i + 1}: weight must be a positive integer (got ${weight})`);
+      if (typeof entry === 'number') {
+        if (!isPosInt(entry)) fail(`${label} row ${i + 1}: credit value must be a positive integer (got ${entry})`);
+        items.push({ kind: 'credits', credits: entry });
+      } else {
+        if (!(entry in jackpotIndex)) fail(`${label} row ${i + 1}: unknown jackpot ${entry}`);
+        if (entry === GRAND) fail(`${label} row ${i + 1}: ${GRAND} is awarded by a full screen, not drawn`);
+        items.push({ kind: 'jackpot', jackpot: jackpotIndex[entry] ?? -1 });
+      }
+      weights.push(weight);
+    });
+    if (weights.reduce((a, b) => a + b, 0) >= MAX_WEIGHT_TOTAL) fail(`${label}: weight total must be below 2^31`);
+    return { name, items, weights };
   });
+
+  // MB table draw
+  const drawn = new Set<string>();
+  raw.mbTableDraw.forEach(({ name, weight }, i) => {
+    if (!(name in mbTableIndex)) fail(`MB Table Draw row ${i + 1}: unknown table ${name}`);
+    if (drawn.has(name)) fail(`MB Table Draw: duplicate row for ${name}`);
+    drawn.add(name);
+    if (!isPosInt(weight)) fail(`MB Table Draw row ${i + 1}: weight must be a positive integer (got ${weight})`);
+  });
+  for (const { name } of raw.mbTables) if (!drawn.has(name)) fail(`MB Table Draw: no row for table ${name}`);
 
   // Hold & Spin trigger draw for 1..auto-1 MBs
   const auto = settings['HnS Auto Trigger MB'];
@@ -216,9 +246,7 @@ export function loadConfig(raw: RawConfig): GameConfig {
   if (settings['HnS Auto Trigger MB'] > cells) fail(`Setting "HnS Auto Trigger MB" exceeds the ${cells} positions`);
   if (settings['FG Trigger SC1'] > reels) fail(`Setting "FG Trigger SC1" exceeds the number of reels`);
 
-  for (const [name, ws] of [['HoldnSpin Reel Weights', raw.hnsReel.map((s) => s.weight)], ['MBPay', mbWeights]] as const) {
-    if (ws.reduce((a, b) => a + b, 0) >= MAX_WEIGHT_TOTAL) fail(`${name}: weight total must be below 2^31`);
-  }
+  if (raw.hnsReel.reduce((a, s) => a + s.weight, 0) >= MAX_WEIGHT_TOTAL) fail('HoldnSpin Reel Weights: weight total must be below 2^31');
 
   if (problems.length) throw new ConfigError(problems);
 
@@ -239,7 +267,8 @@ export function loadConfig(raw: RawConfig): GameConfig {
     fgReels,
     hnsReel,
     hnsReelWeights: new WeightedTable(hnsReel.map((_, i) => i), raw.hnsReel.map((s) => s.weight)),
-    mbPrizes: new WeightedTable(mbItems, mbWeights),
+    mbTables: mbParsed.map(({ name, items, weights }) => ({ name, prizes: new WeightedTable(items, weights) })),
+    mbTableDraw: new WeightedTable(raw.mbTableDraw.map((d) => mbTableIndex[d.name]), raw.mbTableDraw.map((d) => d.weight)),
     hnsTriggerYes,
     hnsTriggerTotal,
     jackpots,

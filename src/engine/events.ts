@@ -21,6 +21,8 @@ export interface SpinEvent {
   mode: Mode;
   /** 1-based free game number (0 in the base game). */
   freeGame: number;
+  /** MB table in effect (index into GameConfig.mbTables), drawn at the start of the base game spin. */
+  mbTable: number;
   stops: number[];
   grid: number[];
   lineWins: LineWin[];
@@ -40,6 +42,7 @@ export interface HnsStartEvent {
   type: 'hnsStart';
   mode: Mode;
   trigger: HnsTrigger;
+  mbTable: number;
   locks: Lock[];
   respins: number;
 }
@@ -57,6 +60,7 @@ export interface HnsRespinEvent {
 export interface HnsEndEvent {
   type: 'hnsEnd';
   mode: Mode;
+  mbTable: number;
   lockedCount: number;
   creditTotal: number;
   /** Mini/Minor/Major awards from locked MBs. */
@@ -92,6 +96,8 @@ export interface WinBreakdown {
 export interface RoundResult {
   roundId: number;
   bet: number;
+  /** MB table drawn for this round. */
+  mbTable: number;
   events: GameEvent[];
   breakdown: WinBreakdown;
   totalWin: number;

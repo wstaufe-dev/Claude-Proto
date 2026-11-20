@@ -23,6 +23,10 @@ amounts are in credits (cr).
 
 ## 3. Base game spin
 
+0. **MB table draw:** at the start of each base game spin, one MB table is
+   drawn from `MB Table Draw`: Low 85, Mid 10, High 5. Every MB value in that
+   round comes from the drawn table, including MBs in any Hold & Spin
+   triggered during its free games.
 1. A stop is chosen uniformly on each base reel, and the reel shows that stop
    plus the next 2 positions, wrapping around the end of the strip.
 2. **Line wins:** each line pays its highest left-to-right combination of
@@ -56,7 +60,7 @@ amounts are in credits (cr).
 ## 5. Hold & Spin
 
 1. **Start:** the MBs that triggered the feature lock in place. Each locked MB
-   gets one draw from the `MBPay` table, which can give a credit value, Mini,
+   gets one draw from the round's MB table (`MBPay Low`, `Mid` or `High`), which can give a credit value, Mini,
    Minor or Major.
 2. **Respins:** the counter starts at 3.
 3. **Each respin:**
@@ -65,7 +69,7 @@ amounts are in credits (cr).
    - Every other unlocked position uses an *unweighted*, uniform stop on the
      same strip.
    - Each position shows only the symbol at its chosen stop. An MB locks and
-     gets an `MBPay` draw; any other symbol counts as a blank.
+     gets a draw from the round's MB table; any other symbol counts as a blank.
    - If at least one new MB locked, the counter resets to 3. Otherwise it goes
      down by 1.
 4. **End:** the feature ends when the counter reaches 0 or all 15 positions
@@ -85,13 +89,25 @@ them MB):
 The weighted position is a deliberate pacing control: on each respin, one
 open position almost never fills.
 
+### MB tables
+
+| Table | Credit values | Average credit value | Draw weight |
+|---|---|---|---|
+| Low | 40 – 4 000 | 80 cr | 85 |
+| Mid | 400 – 12 000 | 802 cr (≈ 10× Low) | 10 |
+| High | 2 000 – 40 000 | 4 023 cr (≈ 50× Low) | 5 |
+
+Each table also contains Mini (weight 10), Minor (3) and Major (1). Every
+table's credit weights total 2 128, so the chance of drawing a jackpot is the
+same in all three: 14 in 2 142 per MB.
+
 ## 6. Jackpots
 
 | Jackpot | Value | Won by |
 |---|---|---|
-| Mini | 1 000 cr, static | an `MBPay` draw |
-| Minor | 2 500 cr, static | an `MBPay` draw |
-| Major | 50 000 cr reset + 0.7% of each bet | an `MBPay` draw |
+| Mini | 1 000 cr, static | an MB table draw |
+| Minor | 2 500 cr, static | an MB table draw |
+| Major | 50 000 cr reset + 0.7% of each bet | an MB table draw |
 | Grand | 1 000 000 cr reset + 0.2% of each bet | 15 MBs on screen: on the triggering spin, or when Hold & Spin ends |
 
 - **Paying a progressive:** a progressive pays its current meter value, and

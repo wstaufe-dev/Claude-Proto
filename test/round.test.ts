@@ -121,6 +121,42 @@ describe('triggers', () => {
   });
 });
 
+describe('MB table draw', () => {
+  const cfg = realConfig();
+
+  it('draws Low/Mid/High about 85/10/5 per round', () => {
+    const state = createState(cfg, BIG);
+    const src = new SeededRandom(11);
+    const counts = [0, 0, 0];
+    const N = 100_000;
+    for (let i = 0; i < N; i++) {
+      const r = playRound(cfg, state, src);
+      settleRound(state, r);
+      counts[r.mbTable]++;
+      for (const e of r.events) if ('mbTable' in e) expect(e.mbTable).toBe(r.mbTable);
+    }
+    [0.85, 0.1, 0.05].forEach((p, i) => expect(Math.abs(counts[i] - N * p)).toBeLessThan(4 * Math.sqrt(N * p * (1 - p))));
+  });
+
+  it('values every MB in the round from the drawn table, including in free games', () => {
+    // Equal draw weights so every table gets exercised.
+    const evenDraw = customConfig((r) => { r.mbTableDraw = r.mbTableDraw.map((d) => ({ ...d, weight: 1 })); });
+    const state = createState(evenDraw, BIG);
+    const src = new SeededRandom(3);
+    const allowed = evenDraw.mbTables.map((t) => new Set(t.prizes.items.filter((p) => p.kind === 'credits').map((p) => (p as { credits: number }).credits)));
+    let checked = 0;
+    for (let i = 0; i < 20_000; i++) {
+      const r = playRound(evenDraw, state, src);
+      settleRound(state, r);
+      for (const e of r.events) {
+        const locks = e.type === 'hnsStart' ? e.locks : e.type === 'hnsRespin' ? e.newLocks : [];
+        for (const l of locks) if (l.prize.kind === 'credits') { expect(allowed[r.mbTable].has(l.prize.credits)).toBe(true); checked++; }
+      }
+    }
+    expect(checked).toBeGreaterThan(1000);
+  });
+});
+
 describe('Grand jackpot', () => {
   it('pays the Grand immediately when the trigger spin shows 15 MB', () => {
     const cfg = customConfig((r) => { r.baseReels = solidReels('MB', 'MB', 'MB', 'MB', 'MB'); });

@@ -103,6 +103,9 @@ row('Avg free games played', s.fgTriggers ? (s.freeSpins / s.fgTriggers).toFixed
 row('Avg FG lines+scatter+HnS', s.fgTriggers ? `${(fgWin / s.fgTriggers / bet).toFixed(2)} × bet` : '-', 'excl. jackpots');
 row('Avg Hold & Spin award', hnsCount ? `${(s.hnsAward / hnsCount / bet).toFixed(2)} × bet` : '-', 'incl. jackpots');
 row('HnS MB chance / position', `${pct(exact.pMbUnweighted, 2)} unwtd`, `${pct(exact.pMbWeighted, 4)} wtd`);
+console.log('  By MB table:                round share     HnS plays   avg HnS award');
+cfg.mbTables.forEach((t, i) => console.log('    ' + t.name.padEnd(24) + pct(s.mbTableRounds[i] / N, 2).padStart(14) +
+  s.hnsByTable[i].toLocaleString('en-US').padStart(14) + (s.hnsByTable[i] ? `${(s.hnsAwardByTable[i] / s.hnsByTable[i] / bet).toFixed(2)} × bet` : '-').padStart(16)));
 console.log('  Hold & Spin ending positions locked:');
 const locked = s.hnsLocked.map((n, k) => [k, n] as const).filter(([, n]) => n > 0);
 for (const [k, n] of locked) row(`    ${k}`, `${pct(n / hnsCount, 2)}`, int(n));

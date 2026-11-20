@@ -1,7 +1,7 @@
 {
   "source": {
     "file": "Proto_v2.xlsx",
-    "sha256": "9005a75233eac6fbaba7f2966e03e4dcb4035792be0a73948fb2999ef792269c"
+    "sha256": "572701b2297e3b499fd742b33387eb40d725afd39cf81563cb629a6cbaee2c7c"
   },
   "symbols": [
     "M1",
@@ -1444,58 +1444,171 @@
       "weight": 1000
     }
   ],
-  "mbTable": [
+  "mbTables": [
     {
-      "entry": 40,
-      "weight": 1600
+      "name": "Low",
+      "rows": [
+        {
+          "entry": 40,
+          "weight": 1600
+        },
+        {
+          "entry": 80,
+          "weight": 300
+        },
+        {
+          "entry": 160,
+          "weight": 75
+        },
+        {
+          "entry": 240,
+          "weight": 25
+        },
+        {
+          "entry": 320,
+          "weight": 25
+        },
+        {
+          "entry": 400,
+          "weight": 75
+        },
+        {
+          "entry": 800,
+          "weight": 25
+        },
+        {
+          "entry": 1200,
+          "weight": 1
+        },
+        {
+          "entry": 1600,
+          "weight": 1
+        },
+        {
+          "entry": 4000,
+          "weight": 1
+        },
+        {
+          "entry": "Mini",
+          "weight": 10
+        },
+        {
+          "entry": "Minor",
+          "weight": 3
+        },
+        {
+          "entry": "Major",
+          "weight": 1
+        }
+      ]
     },
     {
-      "entry": 80,
-      "weight": 300
+      "name": "Mid",
+      "rows": [
+        {
+          "entry": 400,
+          "weight": 1148
+        },
+        {
+          "entry": 800,
+          "weight": 530
+        },
+        {
+          "entry": 1200,
+          "weight": 245
+        },
+        {
+          "entry": 1600,
+          "weight": 113
+        },
+        {
+          "entry": 2000,
+          "weight": 52
+        },
+        {
+          "entry": 4000,
+          "weight": 24
+        },
+        {
+          "entry": 8000,
+          "weight": 11
+        },
+        {
+          "entry": 12000,
+          "weight": 5
+        },
+        {
+          "entry": "Mini",
+          "weight": 10
+        },
+        {
+          "entry": "Minor",
+          "weight": 3
+        },
+        {
+          "entry": "Major",
+          "weight": 1
+        }
+      ]
     },
     {
-      "entry": 160,
-      "weight": 75
+      "name": "High",
+      "rows": [
+        {
+          "entry": 2000,
+          "weight": 1244
+        },
+        {
+          "entry": 4000,
+          "weight": 518
+        },
+        {
+          "entry": 8000,
+          "weight": 216
+        },
+        {
+          "entry": 12000,
+          "weight": 90
+        },
+        {
+          "entry": 16000,
+          "weight": 37
+        },
+        {
+          "entry": 20000,
+          "weight": 16
+        },
+        {
+          "entry": 40000,
+          "weight": 7
+        },
+        {
+          "entry": "Mini",
+          "weight": 10
+        },
+        {
+          "entry": "Minor",
+          "weight": 3
+        },
+        {
+          "entry": "Major",
+          "weight": 1
+        }
+      ]
+    }
+  ],
+  "mbTableDraw": [
+    {
+      "name": "Low",
+      "weight": 85
     },
     {
-      "entry": 240,
-      "weight": 25
-    },
-    {
-      "entry": 320,
-      "weight": 25
-    },
-    {
-      "entry": 400,
-      "weight": 75
-    },
-    {
-      "entry": 800,
-      "weight": 25
-    },
-    {
-      "entry": 1200,
-      "weight": 1
-    },
-    {
-      "entry": 1600,
-      "weight": 1
-    },
-    {
-      "entry": 4000,
-      "weight": 1
-    },
-    {
-      "entry": "Mini",
+      "name": "Mid",
       "weight": 10
     },
     {
-      "entry": "Minor",
-      "weight": 3
-    },
-    {
-      "entry": "Major",
-      "weight": 1
+      "name": "High",
+      "weight": 5
     }
   ],
   "hnsTrigger": [

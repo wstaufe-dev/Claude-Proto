@@ -32,6 +32,8 @@ interface Ctx {
   events: GameEvent[];
   breakdown: WinBreakdown;
   jackpotWins: { jackpot: number; amount: number }[];
+  /** MB table (index into cfg.mbTables) drawn for this round. */
+  mbTable: number;
 }
 
 export function playRound(cfg: GameConfig, state: EngineState, src: RandomSource, opts: RoundOptions = {}): RoundResult {
@@ -43,8 +45,11 @@ export function playRound(cfg: GameConfig, state: EngineState, src: RandomSource
   state.credits -= cfg.bet;
   cfg.jackpots.forEach((j, i) => { if (j.progressive) state.meters[i] += j.incrementCenti; });
 
+  // The MB table is drawn at the start of the base game spin and applies to the whole round.
+  const mbTable = cfg.mbTableDraw.pick(src);
+
   const ctx: Ctx = {
-    cfg, state, src, events: [], jackpotWins: [],
+    cfg, state, src, events: [], jackpotWins: [], mbTable,
     breakdown: {
       baseLines: 0, baseScatter: 0, freeLines: 0, freeScatter: 0,
       hnsCreditsBase: 0, hnsCreditsFree: 0, jackpots: cfg.jackpots.map(() => 0),
@@ -67,6 +72,7 @@ export function playRound(cfg: GameConfig, state: EngineState, src: RandomSource
   return {
     roundId,
     bet: cfg.bet,
+    mbTable,
     events: ctx.events,
     breakdown: ctx.breakdown,
     totalWin,
@@ -110,7 +116,7 @@ function spin(ctx: Ctx, mode: Mode, freeGame: number, forcedStops?: number[]): S
   else if (mbCount > 0 && randInt(src, cfg.hnsTriggerTotal[mbCount]) < cfg.hnsTriggerYes[mbCount]) hnsTrigger = 'draw';
 
   const event: SpinEvent = {
-    type: 'spin', mode, freeGame, stops, grid, lineWins, lineTotal,
+    type: 'spin', mode, freeGame, mbTable: ctx.mbTable, stops, grid, lineWins, lineTotal,
     scatterCount, scatterPay, freeGamesAwarded, mbCount, hnsTrigger,
   };
   ctx.events.push(event);
@@ -141,11 +147,12 @@ function holdAndSpin(ctx: Ctx, mode: Mode, trigger: HnsTrigger, grid: number[]):
   const cells = cfg.reels * cfg.rows;
   const locked = new Array<boolean>(cells).fill(false);
   const locks: Lock[] = [];
+  const prizes = cfg.mbTables[ctx.mbTable].prizes;
   let creditTotal = 0;
   let jackpotTotal = 0;
 
   const lock = (cell: number): Lock => {
-    const prize = cfg.mbPrizes.pick(src);
+    const prize = prizes.pick(src);
     const amount = prize.kind === 'credits' ? prize.credits : awardJackpot(ctx, prize.jackpot);
     if (prize.kind === 'credits') creditTotal += amount;
     else jackpotTotal += amount;
@@ -157,7 +164,7 @@ function holdAndSpin(ctx: Ctx, mode: Mode, trigger: HnsTrigger, grid: number[]):
 
   const initial = cellsWith(grid, cfg.money).map(lock);
   let respins = cfg.hnsRespins;
-  ctx.events.push({ type: 'hnsStart', mode, trigger, locks: initial, respins });
+  ctx.events.push({ type: 'hnsStart', mode, trigger, mbTable: ctx.mbTable, locks: initial, respins });
 
   const strip = cfg.hnsReel;
   while (respins > 0 && locks.length < cells) {
@@ -191,7 +198,7 @@ function holdAndSpin(ctx: Ctx, mode: Mode, trigger: HnsTrigger, grid: number[]):
   const total = creditTotal + jackpotTotal + grand;
   if (mode === 'base') ctx.breakdown.hnsCreditsBase += creditTotal;
   else ctx.breakdown.hnsCreditsFree += creditTotal;
-  ctx.events.push({ type: 'hnsEnd', mode, lockedCount: locks.length, creditTotal, jackpotTotal, grand, total });
+  ctx.events.push({ type: 'hnsEnd', mode, mbTable: ctx.mbTable, lockedCount: locks.length, creditTotal, jackpotTotal, grand, total });
   return total;
 }
 

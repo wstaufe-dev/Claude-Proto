@@ -30,6 +30,10 @@ export interface Stats {
   hnsFreeAuto: number;
   hnsFreeDraw: number;
   hnsAward: number;
+  /** Rounds, Hold & Spin plays and Hold & Spin award by MB table. */
+  mbTableRounds: number[];
+  hnsByTable: number[];
+  hnsAwardByTable: number[];
   /** Hold & Spin endings by number of locked positions (index 0..15). */
   hnsLocked: number[];
   /** Base-game spins by scatter count (index 0..5). */
@@ -48,6 +52,7 @@ export function emptyStats(cfg: GameConfig): Stats {
     jackpotPaid: cfg.jackpots.map(() => 0), jackpotHits: cfg.jackpots.map(() => 0),
     fgTriggers: 0, fgRetriggers: 0, freeSpins: 0,
     hnsBaseAuto: 0, hnsBaseDraw: 0, hnsFreeAuto: 0, hnsFreeDraw: 0, hnsAward: 0,
+    mbTableRounds: cfg.mbTables.map(() => 0), hnsByTable: cfg.mbTables.map(() => 0), hnsAwardByTable: cfg.mbTables.map(() => 0),
     hnsLocked: new Array(cells + 1).fill(0),
     baseScatterCount: new Array(cfg.reels + 1).fill(0),
     baseMbCount: new Array(cells + 1).fill(0),
@@ -77,6 +82,7 @@ export function record(s: Stats, r: RoundResult): void {
   s.sumSq += r.totalWin * r.totalWin;
   if (r.totalWin > 0) s.hits++;
   if (r.totalWin > s.maxWin) s.maxWin = r.totalWin;
+  s.mbTableRounds[r.mbTable]++;
   s.baseLines += b.baseLines;
   s.baseScatter += b.baseScatter;
   s.freeLines += b.freeLines;
@@ -104,6 +110,8 @@ export function record(s: Stats, r: RoundResult): void {
         break;
       case 'hnsEnd':
         s.hnsAward += e.total;
+        s.hnsByTable[e.mbTable]++;
+        s.hnsAwardByTable[e.mbTable] += e.total;
         s.hnsLocked[e.lockedCount]++;
         break;
     }
