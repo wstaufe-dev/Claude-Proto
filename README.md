@@ -80,3 +80,10 @@ engine then plays the round normally.
 - **Credits:** add 10,000 or 100,000.
 - **Session and last round:** session RTP and the last round's breakdown, with
   a download of the round transcript.
+
+## Public hosting (GitHub Pages)
+
+`.github/workflows/pages.yml` runs the tests, builds the game and publishes
+`dist/` to GitHub Pages on every push. To set it up the first time, open the
+repository's **Settings → Pages** and set **Source** to **GitHub Actions**.
+After that, the game is at `https://wstaufe-dev.github.io/Claude-Proto/`.
