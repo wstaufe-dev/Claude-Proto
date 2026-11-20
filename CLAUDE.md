@@ -5,6 +5,9 @@
 The playable game is published as a private artifact:
 https://claude.ai/artifact/84kUEjHb6Vzo3ZVvR7GWBN
 
+It is also public on GitHub Pages at https://wstaufe-dev.github.io/Claude-Proto/,
+deployed automatically by `.github/workflows/pages.yml` on every push.
+
 After any change that affects the game (math workbook, engine, presentation, art):
 
 1. `npm run export-config` if `math/Proto_v2.xlsx` changed
