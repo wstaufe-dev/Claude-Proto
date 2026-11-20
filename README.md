@@ -1,7 +1,6 @@
 # Claude-Proto
 
-A slot prototype built on a shared math engine. The playable game (PixiJS,
-coming next) and the Monte Carlo simulator both call the same presentation-free
+A slot prototype built on a shared math engine. The playable game (PixiJS) and the Monte Carlo simulator both call the same presentation-free
 engine, so a reported return can't drift from what the player sees.
 
 ```
@@ -9,6 +8,7 @@ math/Proto_v2.xlsx            math workbook (source of truth for data)
 math/proto_v2.config.json     raw export of the workbook (generated, committed)
 docs/RULES.md                 game rules the engine implements
 tools/export-config.ts        Excel → JSON exporter
+web/                          PixiJS game (presentation adapter over the shared engine)
 src/engine/                   shared engine: config loader, RNG, evaluation, round transaction
 src/sim/                      simulator, exact base-game analysis, statistics
 test/                         unit, scenario, invariant and parity tests
@@ -19,9 +19,11 @@ test/                         unit, scenario, invariant and parity tests
 ```sh
 npm install                 # .npmrc sets legacy-peer-deps (works around an npm resolver bug)
 npm run export-config       # after editing the workbook: validate and re-export JSON
-npm test                    # 59 tests, a few seconds
+npm test                    # engine, simulator and parity tests (a few seconds)
 npm run typecheck
 npm run sim -- --rounds 10000000 --seed 1 [--workers 4]
+npm run dev                 # play at http://localhost:5173 (Space = spin/skip, D = debug panel)
+npm run build               # static build in dist/
 ```
 
 The simulator prints return by source, with exact base-game figures alongside
@@ -48,3 +50,31 @@ git). Results are reproducible for a given `(seed, workers, rounds)`.
   - `ScriptedRandom` and `RecordingRandom` are for tests and transcripts.
 - **Units:** awards are whole credits. Progressive meters are kept in
   centicredits.
+
+## Playable game
+
+The game in `web/` is an original East Asian theme ("Golden Fortune") made of
+placeholder art drawn in code: 福 禄 寿 喜 tiles, A–10 ranks, a WILD plate,
+a red-envelope BONUS scatter, and cash coins.
+
+**Using real art.** List image files in `web/public/assets/manifest.json`.
+Any symbol you leave out keeps its placeholder.
+
+```json
+{ "symbols": { "M1": "symbols/m1.png", "WW": "symbols/wild.png" },
+  "coin": "symbols/coin.png", "valueCoin": "symbols/coin-plain.png",
+  "jackpotCoins": { "Major": "symbols/major.png" }, "emptyCell": "symbols/empty.png" }
+```
+
+Images are cell-sized (150 × 118 design pixels) and are referenced relative to
+`web/public/assets/`.
+
+**Debug panel** (⚙ or the D key). Each scenario sets up the next spin; the
+engine then plays the round normally.
+- **Forced scenarios:** 3 SC1, 5 SC1, Hold & Spin, free games + Hold & Spin, a big line win.
+- **MB table:** force Low, Mid or High.
+- **Presentation:** turbo, and marking the weighted Hold & Spin position.
+- **Random numbers:** seeded or live.
+- **Credits:** add 10,000 or 100,000.
+- **Session and last round:** session RTP and the last round's breakdown, with
+  a download of the round transcript.

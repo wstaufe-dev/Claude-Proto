@@ -23,6 +23,8 @@ export class SettlementError extends Error {
 export interface RoundOptions {
   /** Base-game reel stops to use instead of drawing them. */
   forceBaseStops?: number[];
+  /** MB table (index into cfg.mbTables) to use instead of drawing it. */
+  forceMbTable?: number;
 }
 
 interface Ctx {
@@ -46,7 +48,14 @@ export function playRound(cfg: GameConfig, state: EngineState, src: RandomSource
   cfg.jackpots.forEach((j, i) => { if (j.progressive) state.meters[i] += j.incrementCenti; });
 
   // The MB table is drawn at the start of the base game spin and applies to the whole round.
-  const mbTable = cfg.mbTableDraw.pick(src);
+  let mbTable: number;
+  if (opts.forceMbTable !== undefined) {
+    if (!cfg.mbTables[opts.forceMbTable]) throw new RangeError(`Forced MB table ${opts.forceMbTable} does not exist`);
+    mbTable = opts.forceMbTable;
+  } else {
+    mbTable = cfg.mbTableDraw.pick(src);
+  }
+  const metersAtStart = state.meters.slice();
 
   const ctx: Ctx = {
     cfg, state, src, events: [], jackpotWins: [], mbTable,
@@ -73,6 +82,7 @@ export function playRound(cfg: GameConfig, state: EngineState, src: RandomSource
     roundId,
     bet: cfg.bet,
     mbTable,
+    metersAtStart,
     events: ctx.events,
     breakdown: ctx.breakdown,
     totalWin,
@@ -164,7 +174,7 @@ function holdAndSpin(ctx: Ctx, mode: Mode, trigger: HnsTrigger, grid: number[]):
 
   const initial = cellsWith(grid, cfg.money).map(lock);
   let respins = cfg.hnsRespins;
-  ctx.events.push({ type: 'hnsStart', mode, trigger, mbTable: ctx.mbTable, locks: initial, respins });
+  ctx.events.push({ type: 'hnsStart', mode, trigger, mbTable: ctx.mbTable, locks: initial, respins, meters: ctx.state.meters.slice() });
 
   const strip = cfg.hnsReel;
   while (respins > 0 && locks.length < cells) {
@@ -191,6 +201,7 @@ function holdAndSpin(ctx: Ctx, mode: Mode, trigger: HnsTrigger, grid: number[]):
     respins = newLocks.length > 0 ? cfg.hnsRespins : respins - 1;
     ctx.events.push({
       type: 'hnsRespin', weightedCells: [...weighted].sort((a, b) => a - b), landed, newLocks, respinsLeft: respins,
+      meters: ctx.state.meters.slice(),
     });
   }
 
@@ -198,7 +209,7 @@ function holdAndSpin(ctx: Ctx, mode: Mode, trigger: HnsTrigger, grid: number[]):
   const total = creditTotal + jackpotTotal + grand;
   if (mode === 'base') ctx.breakdown.hnsCreditsBase += creditTotal;
   else ctx.breakdown.hnsCreditsFree += creditTotal;
-  ctx.events.push({ type: 'hnsEnd', mode, mbTable: ctx.mbTable, lockedCount: locks.length, creditTotal, jackpotTotal, grand, total });
+  ctx.events.push({ type: 'hnsEnd', mode, mbTable: ctx.mbTable, lockedCount: locks.length, creditTotal, jackpotTotal, grand, total, meters: ctx.state.meters.slice() });
   return total;
 }
 

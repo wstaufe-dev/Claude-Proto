@@ -5,9 +5,11 @@
   "type": "module",
   "description": "Slot prototype: shared math engine, Monte Carlo simulator and (later) PixiJS presentation.",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "export-config": "tsx tools/export-config.ts",
     "sim": "tsx src/sim/cli.ts",
-    
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
@@ -16,6 +18,10 @@
     "exceljs": "4.4.0",
     "tsx": "4.23.15",
     "typescript": "5.9.3",
+    "vite": "8.3.5",
     "vitest": "4.1.12"
+  },
+  "dependencies": {
+    "pixi.js": "8.22.0"
   }
 }

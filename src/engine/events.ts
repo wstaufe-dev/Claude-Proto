@@ -45,6 +45,8 @@ export interface HnsStartEvent {
   mbTable: number;
   locks: Lock[];
   respins: number;
+  /** Meter values (centicredits) after this step's jackpot awards. */
+  meters: number[];
 }
 
 export interface HnsRespinEvent {
@@ -55,6 +57,7 @@ export interface HnsRespinEvent {
   landed: { cell: number; stop: number; symbol: number }[];
   newLocks: Lock[];
   respinsLeft: number;
+  meters: number[];
 }
 
 export interface HnsEndEvent {
@@ -68,6 +71,7 @@ export interface HnsEndEvent {
   /** Grand amount (0 if the screen was not filled). */
   grand: number;
   total: number;
+  meters: number[];
 }
 
 export interface RoundEndEvent { type: 'roundEnd'; totalWin: number }
@@ -98,6 +102,8 @@ export interface RoundResult {
   bet: number;
   /** MB table drawn for this round. */
   mbTable: number;
+  /** Meter values (centicredits) once this round's contributions are added, before any award. */
+  metersAtStart: number[];
   events: GameEvent[];
   breakdown: WinBreakdown;
   totalWin: number;
