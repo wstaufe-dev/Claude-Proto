@@ -10,13 +10,14 @@ describe('loadConfig on the exported workbook', () => {
     expect(cfg.rows).toBe(3);
     expect(cfg.lines).toHaveLength(25);
     expect(cfg.baseReels.map((r) => r.length)).toEqual([65, 71, 65, 85, 83]);
-    expect(cfg.fgReels).toEqual(cfg.baseReels);
-    expect(cfg.hnsReel).toHaveLength(97);
+    expect(cfg.fgReels.map((r) => r.length)).toEqual([65, 71, 65, 85, 83]);
+    expect(cfg.hnsReel).toHaveLength(100);
+    expect(cfg.hnsReel.filter((s) => s === cfg.money)).toHaveLength(12); // 12% MB per unweighted position
     expect(cfg.bet).toBe(80);
   });
 
   it('maps pays and scatter pays', () => {
-    expect(cfg.linePay[cfg.symbolId.M1].slice(3)).toEqual([10, 50, 150]);
+    expect(cfg.linePay[cfg.symbolId.M1].slice(3)).toEqual([40, 200, 600]);
     expect(cfg.linePay[cfg.wild].every((p) => p === 0)).toBe(true);
     expect(cfg.scatterPay).toEqual([0, 0, 0, 0, 400, 4000]);
   });

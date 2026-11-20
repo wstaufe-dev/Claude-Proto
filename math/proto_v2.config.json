@@ -1,7 +1,7 @@
 {
   "source": {
     "file": "Proto_v2.xlsx",
-    "sha256": "bdf7767ea39e79fac7b18b980e10cba5ae78cf1673ff7a06218e830ecd92d179"
+    "sha256": "2d7e958ab221ce9adf9a073435abb4e83e9d4b5ecf5a8b219f3b438e544871e0"
   },
   "symbols": [
     "M1",
@@ -21,73 +21,73 @@
     {
       "symbol": "M1",
       "pays": [
-        10,
-        50,
-        150
+        40,
+        200,
+        600
       ]
     },
     {
       "symbol": "M2",
       "pays": [
-        5,
-        30,
-        100
+        20,
+        120,
+        400
       ]
     },
     {
       "symbol": "M3",
       "pays": [
-        5,
-        25,
-        100
+        20,
+        100,
+        400
       ]
     },
     {
       "symbol": "M4",
       "pays": [
-        5,
-        25,
-        100
+        20,
+        100,
+        400
       ]
     },
     {
       "symbol": "F1",
       "pays": [
-        5,
         20,
-        75
+        80,
+        300
       ]
     },
     {
       "symbol": "F2",
       "pays": [
-        5,
-        10,
-        50
+        20,
+        40,
+        200
       ]
     },
     {
       "symbol": "F3",
       "pays": [
-        5,
-        10,
-        50
+        20,
+        40,
+        200
       ]
     },
     {
       "symbol": "F4",
       "pays": [
-        5,
-        10,
-        50
+        20,
+        40,
+        200
       ]
     },
     {
       "symbol": "F5",
       "pays": [
-        5,
-        10,
-        50
+        20,
+        40,
+        200
       ]
     },
     {
@@ -325,7 +325,7 @@
       "M1",
       "F4",
       "M3",
-      "F5",
+      "SC1",
       "M1",
       "F1",
       "F4",
@@ -465,7 +465,7 @@
       "F1",
       "MB",
       "F2",
-      "F5",
+      "SC1",
       "F3",
       "M1",
       "F1",
@@ -639,7 +639,7 @@
       "F4",
       "F1",
       "M3",
-      "F4",
+      "SC1",
       "F2",
       "M4",
       "F1",
@@ -676,7 +676,7 @@
   "fgReels": [
     [
       "F4",
-      "F2",
+      "MB",
       "M3",
       "F4",
       "F5",
@@ -694,19 +694,19 @@
       "F5",
       "M3",
       "M4",
-      "F2",
+      "MB",
       "M1",
       "M3",
       "F2",
       "M2",
-      "F2",
+      "MB",
       "M3",
       "F5",
       "F2",
       "M1",
-      "F4",
+      "MB",
       "M3",
-      "F5",
+      "SC1",
       "M1",
       "F1",
       "F4",
@@ -719,7 +719,7 @@
       "M2",
       "F5",
       "M3",
-      "F4",
+      "MB",
       "M1",
       "M2",
       "F2",
@@ -727,7 +727,7 @@
       "M3",
       "M1",
       "M3",
-      "F3",
+      "MB",
       "F5",
       "F1",
       "F2",
@@ -753,7 +753,7 @@
       "F3",
       "F4",
       "M4",
-      "F1",
+      "MB",
       "F3",
       "F4",
       "M4",
@@ -761,7 +761,7 @@
       "F3",
       "SC1",
       "M2",
-      "F1",
+      "MB",
       "F4",
       "F2",
       "WW",
@@ -777,7 +777,7 @@
       "M2",
       "F5",
       "M3",
-      "F3",
+      "MB",
       "M2",
       "F1",
       "WW",
@@ -799,11 +799,11 @@
       "M2",
       "M1",
       "F1",
-      "F3",
+      "MB",
       "M2",
       "M3",
       "M4",
-      "F2",
+      "MB",
       "F1",
       "M4",
       "M3",
@@ -824,7 +824,7 @@
       "F1",
       "F2",
       "M2",
-      "F1",
+      "MB",
       "M4",
       "WW",
       "WW",
@@ -832,10 +832,10 @@
       "F1",
       "SC1",
       "M2",
-      "F3",
+      "MB",
       "F2",
       "F1",
-      "F3",
+      "MB",
       "M3",
       "F4",
       "MB",
@@ -846,19 +846,19 @@
       "F1",
       "MB",
       "F2",
-      "F5",
+      "SC1",
       "F3",
       "M1",
       "F1",
       "M4",
       "M2",
-      "F2",
+      "MB",
       "M4",
       "F3",
       "M3",
       "F1",
       "M1",
-      "F1",
+      "MB",
       "M1",
       "M3",
       "M3",
@@ -870,7 +870,7 @@
       "F3",
       "M4",
       "M2",
-      "F5",
+      "MB",
       "F3",
       "F3",
       "M2",
@@ -883,7 +883,7 @@
     ],
     [
       "M2",
-      "F3",
+      "MB",
       "F5",
       "M1",
       "M4",
@@ -915,7 +915,7 @@
       "M4",
       "F2",
       "M3",
-      "F4",
+      "MB",
       "M1",
       "F3",
       "M4",
@@ -926,7 +926,7 @@
       "M1",
       "F2",
       "M2",
-      "F4",
+      "MB",
       "M3",
       "F5",
       "F5",
@@ -937,7 +937,7 @@
       "F2",
       "M4",
       "M3",
-      "F4",
+      "MB",
       "M4",
       "F4",
       "M3",
@@ -974,7 +974,7 @@
       "M2",
       "F2",
       "M4",
-      "F3",
+      "MB",
       "F4",
       "WW",
       "WW",
@@ -1006,7 +1006,7 @@
       "M3",
       "M4",
       "F4",
-      "F2",
+      "MB",
       "F1",
       "F3",
       "WW",
@@ -1020,11 +1020,11 @@
       "F4",
       "F1",
       "M3",
-      "F4",
+      "SC1",
       "F2",
       "M4",
       "F1",
-      "F1",
+      "MB",
       "F2",
       "F3",
       "M2",
@@ -1032,7 +1032,7 @@
       "M4",
       "F3",
       "F3",
-      "F4",
+      "MB",
       "M4",
       "M4",
       "WW",
@@ -1040,7 +1040,7 @@
       "F2",
       "M4",
       "F5",
-      "F1",
+      "MB",
       "F4",
       "M1",
       "F2",
@@ -1092,200 +1092,8 @@
       "weight": 1000
     },
     {
-      "symbol": "M1",
-      "weight": 1000
-    },
-    {
-      "symbol": "M2",
-      "weight": 1000
-    },
-    {
-      "symbol": "F4",
-      "weight": 1000
-    },
-    {
-      "symbol": "F5",
-      "weight": 1000
-    },
-    {
-      "symbol": "M3",
-      "weight": 1000
-    },
-    {
-      "symbol": "M4",
-      "weight": 1000
-    },
-    {
-      "symbol": "F4",
-      "weight": 1000
-    },
-    {
-      "symbol": "M1",
-      "weight": 1000
-    },
-    {
-      "symbol": "M2",
-      "weight": 1000
-    },
-    {
       "symbol": "MB",
       "weight": 1
-    },
-    {
-      "symbol": "F5",
-      "weight": 1000
-    },
-    {
-      "symbol": "M3",
-      "weight": 1000
-    },
-    {
-      "symbol": "F2",
-      "weight": 1000
-    },
-    {
-      "symbol": "F3",
-      "weight": 1000
-    },
-    {
-      "symbol": "M2",
-      "weight": 1000
-    },
-    {
-      "symbol": "MB",
-      "weight": 1
-    },
-    {
-      "symbol": "M1",
-      "weight": 1000
-    },
-    {
-      "symbol": "M3",
-      "weight": 1000
-    },
-    {
-      "symbol": "M4",
-      "weight": 1000
-    },
-    {
-      "symbol": "MB",
-      "weight": 1
-    },
-    {
-      "symbol": "F4",
-      "weight": 1000
-    },
-    {
-      "symbol": "F1",
-      "weight": 1000
-    },
-    {
-      "symbol": "F5",
-      "weight": 1000
-    },
-    {
-      "symbol": "M4",
-      "weight": 1000
-    },
-    {
-      "symbol": "F4",
-      "weight": 1000
-    },
-    {
-      "symbol": "M3",
-      "weight": 1000
-    },
-    {
-      "symbol": "M4",
-      "weight": 1000
-    },
-    {
-      "symbol": "F4",
-      "weight": 1000
-    },
-    {
-      "symbol": "F2",
-      "weight": 1000
-    },
-    {
-      "symbol": "F1",
-      "weight": 1000
-    },
-    {
-      "symbol": "M4",
-      "weight": 1000
-    },
-    {
-      "symbol": "M3",
-      "weight": 1000
-    },
-    {
-      "symbol": "M4",
-      "weight": 1000
-    },
-    {
-      "symbol": "F1",
-      "weight": 1000
-    },
-    {
-      "symbol": "M3",
-      "weight": 1000
-    },
-    {
-      "symbol": "F1",
-      "weight": 1000
-    },
-    {
-      "symbol": "F5",
-      "weight": 1000
-    },
-    {
-      "symbol": "F1",
-      "weight": 1000
-    },
-    {
-      "symbol": "F2",
-      "weight": 1000
-    },
-    {
-      "symbol": "F4",
-      "weight": 1000
-    },
-    {
-      "symbol": "MB",
-      "weight": 1
-    },
-    {
-      "symbol": "M2",
-      "weight": 1000
-    },
-    {
-      "symbol": "F2",
-      "weight": 1000
-    },
-    {
-      "symbol": "M4",
-      "weight": 1000
-    },
-    {
-      "symbol": "F3",
-      "weight": 1000
-    },
-    {
-      "symbol": "F4",
-      "weight": 1000
-    },
-    {
-      "symbol": "M3",
-      "weight": 1000
-    },
-    {
-      "symbol": "M4",
-      "weight": 1000
-    },
-    {
-      "symbol": "M1",
-      "weight": 1000
     },
     {
       "symbol": "M2",
@@ -1344,8 +1152,64 @@
       "weight": 1000
     },
     {
+      "symbol": "MB",
+      "weight": 1
+    },
+    {
+      "symbol": "M1",
+      "weight": 1000
+    },
+    {
       "symbol": "M3",
       "weight": 1000
+    },
+    {
+      "symbol": "M4",
+      "weight": 1000
+    },
+    {
+      "symbol": "MB",
+      "weight": 1
+    },
+    {
+      "symbol": "F4",
+      "weight": 1000
+    },
+    {
+      "symbol": "F1",
+      "weight": 1000
+    },
+    {
+      "symbol": "F5",
+      "weight": 1000
+    },
+    {
+      "symbol": "M4",
+      "weight": 1000
+    },
+    {
+      "symbol": "F4",
+      "weight": 1000
+    },
+    {
+      "symbol": "M3",
+      "weight": 1000
+    },
+    {
+      "symbol": "M4",
+      "weight": 1000
+    },
+    {
+      "symbol": "F4",
+      "weight": 1000
+    },
+    {
+      "symbol": "F2",
+      "weight": 1000
+    },
+    {
+      "symbol": "MB",
+      "weight": 1
     },
     {
       "symbol": "M4",
@@ -1358,6 +1222,142 @@
     {
       "symbol": "M4",
       "weight": 1000
+    },
+    {
+      "symbol": "F1",
+      "weight": 1000
+    },
+    {
+      "symbol": "M3",
+      "weight": 1000
+    },
+    {
+      "symbol": "F1",
+      "weight": 1000
+    },
+    {
+      "symbol": "F5",
+      "weight": 1000
+    },
+    {
+      "symbol": "F1",
+      "weight": 1000
+    },
+    {
+      "symbol": "F2",
+      "weight": 1000
+    },
+    {
+      "symbol": "F4",
+      "weight": 1000
+    },
+    {
+      "symbol": "MB",
+      "weight": 1
+    },
+    {
+      "symbol": "M2",
+      "weight": 1000
+    },
+    {
+      "symbol": "F2",
+      "weight": 1000
+    },
+    {
+      "symbol": "M4",
+      "weight": 1000
+    },
+    {
+      "symbol": "F3",
+      "weight": 1000
+    },
+    {
+      "symbol": "F4",
+      "weight": 1000
+    },
+    {
+      "symbol": "M3",
+      "weight": 1000
+    },
+    {
+      "symbol": "M4",
+      "weight": 1000
+    },
+    {
+      "symbol": "MB",
+      "weight": 1
+    },
+    {
+      "symbol": "M2",
+      "weight": 1000
+    },
+    {
+      "symbol": "F4",
+      "weight": 1000
+    },
+    {
+      "symbol": "F5",
+      "weight": 1000
+    },
+    {
+      "symbol": "M3",
+      "weight": 1000
+    },
+    {
+      "symbol": "M4",
+      "weight": 1000
+    },
+    {
+      "symbol": "F4",
+      "weight": 1000
+    },
+    {
+      "symbol": "M1",
+      "weight": 1000
+    },
+    {
+      "symbol": "M2",
+      "weight": 1000
+    },
+    {
+      "symbol": "MB",
+      "weight": 1
+    },
+    {
+      "symbol": "F5",
+      "weight": 1000
+    },
+    {
+      "symbol": "M3",
+      "weight": 1000
+    },
+    {
+      "symbol": "F2",
+      "weight": 1000
+    },
+    {
+      "symbol": "F3",
+      "weight": 1000
+    },
+    {
+      "symbol": "M2",
+      "weight": 1000
+    },
+    {
+      "symbol": "M3",
+      "weight": 1000
+    },
+    {
+      "symbol": "M4",
+      "weight": 1000
+    },
+    {
+      "symbol": "M3",
+      "weight": 1000
+    },
+    {
+      "symbol": "MB",
+      "weight": 1
     },
     {
       "symbol": "F3",
@@ -1424,8 +1424,8 @@
       "weight": 1000
     },
     {
-      "symbol": "F1",
-      "weight": 1000
+      "symbol": "MB",
+      "weight": 1
     },
     {
       "symbol": "F5",
@@ -1441,6 +1441,18 @@
     },
     {
       "symbol": "F4",
+      "weight": 1000
+    },
+    {
+      "symbol": "F1",
+      "weight": 1000
+    },
+    {
+      "symbol": "M2",
+      "weight": 1000
+    },
+    {
+      "symbol": "F3",
       "weight": 1000
     }
   ],
@@ -1450,43 +1462,43 @@
       "rows": [
         {
           "entry": 40,
-          "weight": 1600
+          "weight": 1515
         },
         {
           "entry": 80,
-          "weight": 300
+          "weight": 294
         },
         {
           "entry": 160,
-          "weight": 75
+          "weight": 79
         },
         {
           "entry": 240,
-          "weight": 25
+          "weight": 28
         },
         {
           "entry": 320,
-          "weight": 25
+          "weight": 30
         },
         {
           "entry": 400,
-          "weight": 75
+          "weight": 98
         },
         {
           "entry": 800,
-          "weight": 25
+          "weight": 46
         },
         {
           "entry": 1200,
-          "weight": 1
+          "weight": 3
         },
         {
           "entry": 1600,
-          "weight": 1
+          "weight": 4
         },
         {
           "entry": 4000,
-          "weight": 1
+          "weight": 31
         },
         {
           "entry": "Mini",
@@ -1507,43 +1519,43 @@
       "rows": [
         {
           "entry": 40,
-          "weight": 1384
+          "weight": 1228
         },
         {
           "entry": 80,
-          "weight": 274
+          "weight": 245
         },
         {
           "entry": 160,
-          "weight": 76
+          "weight": 69
         },
         {
           "entry": 240,
-          "weight": 28
+          "weight": 26
         },
         {
           "entry": 320,
-          "weight": 31
+          "weight": 30
         },
         {
           "entry": 400,
-          "weight": 104
+          "weight": 101
         },
         {
           "entry": 800,
-          "weight": 59
+          "weight": 62
         },
         {
           "entry": 1200,
-          "weight": 4
+          "weight": 5
         },
         {
           "entry": 1600,
-          "weight": 7
+          "weight": 9
         },
         {
           "entry": 4000,
-          "weight": 161
+          "weight": 353
         },
         {
           "entry": "Mini",
@@ -1564,43 +1576,43 @@
       "rows": [
         {
           "entry": 40,
-          "weight": 889
+          "weight": 344
         },
         {
           "entry": 80,
-          "weight": 180
+          "weight": 71
         },
         {
           "entry": 160,
-          "weight": 52
+          "weight": 21
         },
         {
           "entry": 240,
-          "weight": 20
+          "weight": 8
         },
         {
           "entry": 320,
-          "weight": 23
-        },
-        {
-          "entry": 400,
-          "weight": 81
-        },
-        {
-          "entry": 800,
-          "weight": 56
-        },
-        {
-          "entry": 1200,
-          "weight": 5
-        },
-        {
-          "entry": 1600,
           "weight": 10
         },
         {
+          "entry": 400,
+          "weight": 36
+        },
+        {
+          "entry": 800,
+          "weight": 30
+        },
+        {
+          "entry": 1200,
+          "weight": 3
+        },
+        {
+          "entry": 1600,
+          "weight": 7
+        },
+        {
           "entry": 4000,
-          "weight": 812
+          "weight": 1598
         },
         {
           "entry": "Mini",
@@ -1635,27 +1647,27 @@
     {
       "count": 1,
       "yes": 1,
-      "no": 200
+      "no": 1349
     },
     {
       "count": 2,
       "yes": 1,
-      "no": 40
+      "no": 274
     },
     {
       "count": 3,
       "yes": 1,
-      "no": 11
+      "no": 80
     },
     {
       "count": 4,
       "yes": 1,
-      "no": 6
+      "no": 46
     },
     {
       "count": 5,
       "yes": 1,
-      "no": 2
+      "no": 19
     }
   ],
   "jackpots": [

@@ -7,21 +7,26 @@ const ids = (...names: string[]) => names.map((n) => cfg.symbolId[n]);
 const pay = (...names: string[]) => evaluateSequence(cfg, ids(...names))[2];
 
 describe('evaluateSequence (left to right, WW substitutes for M and F)', () => {
+  // [sequence, winning symbol, count] — the expected pay is looked up in the config, so pay tuning doesn't break these.
   it.each([
-    [['M1', 'M1', 'M1', 'M1', 'M1'], 150],
-    [['M1', 'M1', 'M1', 'M1', 'F1'], 50],
-    [['M1', 'M1', 'M1', 'F1', 'M1'], 10],
-    [['M1', 'M1', 'F1', 'M1', 'M1'], 0],
-    [['F1', 'M1', 'M1', 'M1', 'M1'], 0],
-    [['M2', 'WW', 'M2', 'WW', 'M2'], 100],
-    [['M3', 'WW', 'WW', 'F2', 'F2'], 5],
-    [['WW', 'WW', 'M2', 'M2', 'F1'], 30],
-    [['WW', 'WW', 'WW', 'WW', 'WW'], 0],
-    [['SC1', 'SC1', 'SC1', 'SC1', 'SC1'], 0],
-    [['MB', 'MB', 'MB', 'MB', 'MB'], 0],
-    [['MB', 'WW', 'WW', 'M1', 'M1'], 0],
-    [['F5', 'F5', 'F5', 'SC1', 'F5'], 5],
-  ])('%j pays %i', (seq, expected) => expect(pay(...seq)).toBe(expected));
+    [['M1', 'M1', 'M1', 'M1', 'M1'], 'M1', 5],
+    [['M1', 'M1', 'M1', 'M1', 'F1'], 'M1', 4],
+    [['M1', 'M1', 'M1', 'F1', 'M1'], 'M1', 3],
+    [['M1', 'M1', 'F1', 'M1', 'M1'], null, 0],
+    [['F1', 'M1', 'M1', 'M1', 'M1'], null, 0],
+    [['M2', 'WW', 'M2', 'WW', 'M2'], 'M2', 5],
+    [['M3', 'WW', 'WW', 'F2', 'F2'], 'M3', 3],
+    [['WW', 'WW', 'M2', 'M2', 'F1'], 'M2', 4],
+    [['WW', 'WW', 'WW', 'WW', 'WW'], null, 0],
+    [['SC1', 'SC1', 'SC1', 'SC1', 'SC1'], null, 0],
+    [['MB', 'MB', 'MB', 'MB', 'MB'], null, 0],
+    [['MB', 'WW', 'WW', 'M1', 'M1'], null, 0],
+    [['F5', 'F5', 'F5', 'SC1', 'F5'], 'F5', 3],
+  ] as [string[], string | null, number][])('%j wins %s ×%i', (seq, sym, count) => {
+    const expected = sym ? cfg.linePay[cfg.symbolId[sym]][count] : 0;
+    if (sym) expect(expected).toBeGreaterThan(0);
+    expect(pay(...seq)).toBe(expected);
+  });
 });
 
 describe('windowFor and evaluateLines', () => {
@@ -39,7 +44,7 @@ describe('windowFor and evaluateLines', () => {
     const grid = new Array(15).fill(cfg.symbolId.M1);
     const wins = evaluateLines(cfg, grid);
     expect(wins).toHaveLength(25);
-    expect(wins.reduce((a, w) => a + w.pay, 0)).toBe(25 * 150);
+    expect(wins.reduce((a, w) => a + w.pay, 0)).toBe(25 * cfg.linePay[cfg.symbolId.M1][5]);
   });
 
   it('follows each line through its rows', () => {

@@ -52,7 +52,9 @@ amounts are in credits (cr).
 
 ## 4. Free games
 
-- 6 free games, played on `FG Reel1–5` (currently identical to the base reels)
+- 6 free games, played on `FG Reel1–5`: the base reels with 4–6 extra MB
+  per reel (in place of low symbols), so roughly 1 in 6 free-game bonuses
+  reaches Hold & Spin
   with the same pays and no multiplier.
 - **Retrigger:** 3 or more SC1 adds 6 more games and pays the same 4 SC1 and
   5 SC1 credit awards.
@@ -81,13 +83,13 @@ amounts are in credits (cr).
    every Mini, Minor and Major won. The same jackpot can be won more than once.
    Add the Grand if all 15 positions are locked.
 
-Probability that one position lands an MB on a respin (strip: 97 stops, 7 of
-them MB):
+Probability that one position lands an MB on a respin (strip: 100 stops, 12
+of them MB):
 
 | Position type | Probability |
 |---|---|
-| Unweighted | 7 / 97 ≈ 7.2% |
-| Weighted | 7 / 90 007 ≈ 0.008% |
+| Unweighted | 12 / 100 = 12% |
+| Weighted | 12 / 88 012 ≈ 0.014% |
 
 The weighted position is a deliberate pacing control: on each respin, one
 open position almost never fills.
@@ -100,18 +102,18 @@ the weights differ.
 
 | Credits | Low | Mid | High |
 |---|---|---|---|
-| 40 | 1 600 | 1 384 | 889 |
-| 80 | 300 | 274 | 180 |
-| 160 | 75 | 76 | 52 |
-| 240 | 25 | 28 | 20 |
-| 320 | 25 | 31 | 23 |
-| 400 | 75 | 104 | 81 |
-| 800 | 25 | 59 | 56 |
-| 1 200 | 1 | 4 | 5 |
-| 1 600 | 1 | 7 | 10 |
-| 4 000 | 1 | 161 | 812 |
+| 40 | 1 515 | 1 228 | 344 |
+| 80 | 294 | 245 | 71 |
+| 160 | 79 | 69 | 21 |
+| 240 | 28 | 26 | 8 |
+| 320 | 30 | 30 | 10 |
+| 400 | 98 | 101 | 36 |
+| 800 | 46 | 62 | 30 |
+| 1 200 | 3 | 5 | 3 |
+| 1 600 | 4 | 9 | 7 |
+| 4 000 | 31 | 353 | 1 598 |
 | Mini / Minor / Major | 10 / 3 / 1 | 10 / 3 / 1 | 10 / 3 / 1 |
-| **Average credit value** | **80 cr** | **402 cr (5.0×)** | **1 606 cr (20.0×)** |
+| **Average credit value** | **152 cr** | **760 cr (5.0×)** | **3042 cr (20.0×)** |
 | **Draw weight** | **85** | **10** | **5** |
 
 Every table's credit weights total 2 128, so the chance of drawing a jackpot
@@ -132,3 +134,29 @@ is the same in all three: 14 in 2 142 per MB.
   spin. It ends at once and pays its MB values plus the Grand.
 - **Meter precision:** meters are kept in hundredths of a credit so that
   increments stay exact integers. Awards are paid in whole credits, rounded down.
+
+## 7. Math summary
+
+Measured over 100 million simulated rounds (two 50M-round seeds), at a bet of
+80 cr.
+
+| | Target | Result |
+|---|---|---|
+| Total RTP | 90% | 89.8% ± 0.3% |
+| Base game (lines + scatter pays) | ≈ 35% | 35.7% (exact) |
+| Free games trigger | ≈ 1 in 120 | 1 in 121 (exact) |
+| Hold & Spin trigger (base game) | ≈ 1 in 120 | 1 in 120 (exact) |
+| Free-game bonuses that reach Hold & Spin | ≈ 1 in 6 | 1 in 6.05 |
+| MB chance per unweighted Hold & Spin position | ≈ 12% | 12% |
+
+### Where the return comes from
+
+| Source | Return |
+|---|---|
+| Base game lines + scatter | 35.7% |
+| Free games lines + scatter | 1.7% |
+| Hold & Spin credits (base / in FG) | 40.3% / 6.7% |
+| Mini / Minor / Major / Grand | 0.6% / 0.5% / 3.7% / 0.7% |
+
+- Standard deviation per round is about 16× bet.
+- The Grand hit 44 times in 100M rounds, so its share is only approximate.
