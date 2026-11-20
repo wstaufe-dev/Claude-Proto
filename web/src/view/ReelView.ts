@@ -2,64 +2,65 @@
  * One reel column. It scrolls the real strip and stops exactly on the stop
  * the engine chose: the presentation never picks outcomes itself.
  *
- * Money balls carry a value label. Landed MBs show the value the engine
- * drew; MBs that only scroll past show a cosmetic value from the round's table.
+ * Money balls show their value, using pre-rendered coin textures. Landed MBs
+ * show the value the engine drew; MBs that only scroll past show a cosmetic
+ * value drawn (with replacement) from the round's MB table.
+ *
+ * Used for the 5 × 3 reels (3 visible rows) and for each Hold & Spin
+ * position (1 visible row, with non-MB symbols dimmed).
  */
-import { BlurFilter, Container, Sprite, Text, type Texture } from 'pixi.js';
-import { C, CELL_H, CELL_W, FONT_TITLE, ROWS } from '../art/theme.ts';
+import { BlurFilter, Container, Sprite, type Texture } from 'pixi.js';
+import type { CoinLabel } from '../art/symbols.ts';
+import { CELL_H, CELL_W, ROWS } from '../art/theme.ts';
 import { easeInCubic, easeOutBack, linear, type Anim } from './anim.ts';
 
-const SPEED = 30; // symbols per second at full speed
+export type { CoinLabel };
 
-/** What a money ball shows: a credit value, or a jackpot name. */
-export type CoinLabel = { credits: number } | { jackpot: string };
+const SPEED = 30; // symbols per second at full speed
+const SPIN_BLUR = 4; // light enough that coin values stay readable while spinning
 
 export interface ReelArt {
   symbol(id: number): Texture;
   isMoney(id: number): boolean;
-  jackpotCoin(name: string): Texture;
+  coin(label: CoinLabel): Texture;
   /** A cosmetic label for an MB that scrolls past (not an outcome). */
   randomLabel(): CoinLabel;
 }
 
-class Cell extends Container {
-  readonly sprite = new Sprite();
-  readonly value: Text;
-  constructor() {
-    super();
-    this.sprite.anchor.set(0.5);
-    this.value = new Text({
-      text: '',
-      style: { fontFamily: FONT_TITLE, fontSize: 26, fontWeight: '900', fill: C.cream, stroke: { color: C.ink, width: 5, join: 'round' }, padding: 8 },
-    });
-    this.value.anchor.set(0.5);
-    this.value.y = 2;
-    this.addChild(this.sprite, this.value);
-  }
+export interface ReelOptions {
+  /** Visible rows (3 for the main reels, 1 for a Hold & Spin position). */
+  rows?: number;
+  /** Alpha for non-MB symbols (1 = normal). Hold & Spin dims them heavily. */
+  nonMoneyAlpha?: number;
 }
 
 export class ReelView extends Container {
   private strip: number[];
   private pos = 0;
-  private readonly cells: Cell[] = [];
+  private readonly rows: number;
+  private readonly nonMoneyAlpha: number;
+  private readonly cells: Sprite[] = [];
   private readonly blur = new BlurFilter({ strengthX: 0, strengthY: 0, quality: 2 });
   /** Labels by strip index: engine values for the landed window, cosmetic ones elsewhere. */
   private labels = new Map<number, CoinLabel>();
 
-  constructor(strip: number[], private readonly art: ReelArt, private readonly anim: Anim) {
+  constructor(strip: number[], private readonly art: ReelArt, private readonly anim: Anim, opts: ReelOptions = {}) {
     super();
     this.strip = strip;
-    for (let i = 0; i < ROWS + 2; i++) {
-      const c = new Cell();
-      c.x = CELL_W / 2;
-      this.cells.push(c);
-      this.addChild(c);
+    this.rows = opts.rows ?? ROWS;
+    this.nonMoneyAlpha = opts.nonMoneyAlpha ?? 1;
+    for (let i = 0; i < this.rows + 2; i++) {
+      const s = new Sprite();
+      s.anchor.set(0.5);
+      s.x = CELL_W / 2;
+      this.cells.push(s);
+      this.addChild(s);
     }
     this.filters = [this.blur];
     this.render();
   }
 
-  /** Switch to another strip set (base ↔ free games) showing `stop`. */
+  /** Switch strip (base ↔ free games) showing `stop`. */
   setStrip(strip: number[], stop: number, landed?: (CoinLabel | null)[]) {
     this.strip = strip;
     this.pos = stop;
@@ -68,8 +69,8 @@ export class ReelView extends Container {
     this.render();
   }
 
-  /** The display object at visible row 0..2 (valid when stopped). */
-  spriteAt(row: number): Container {
+  /** The display object at visible row 0..rows-1 (valid when stopped). */
+  spriteAt(row: number): Sprite {
     return this.cells[row + 1];
   }
 
@@ -90,30 +91,22 @@ export class ReelView extends Container {
     for (let i = 0; i < this.cells.length; i++) {
       const idx = (((base + i - 1) % len) + len) % len;
       const sym = this.strip[idx];
-      const c = this.cells[i];
-      c.y = (i - 1 - frac) * CELL_H + CELL_H / 2;
-      c.scale.set(1);
-      c.alpha = 1;
+      const s = this.cells[i];
+      s.y = (i - 1 - frac) * CELL_H + CELL_H / 2;
+      s.scale.set(1);
       if (this.art.isMoney(sym)) {
-        const l = this.labelFor(idx);
-        if ('jackpot' in l) {
-          c.sprite.texture = this.art.jackpotCoin(l.jackpot);
-          c.value.text = '';
-        } else {
-          c.sprite.texture = this.art.symbol(sym);
-          c.value.text = l.credits.toLocaleString('en-US');
-          c.value.style.fontSize = l.credits >= 1000 ? 24 : 28;
-        }
+        s.texture = this.art.coin(this.labelFor(idx));
+        s.alpha = 1;
       } else {
-        c.sprite.texture = this.art.symbol(sym);
-        c.value.text = '';
+        s.texture = this.art.symbol(sym);
+        s.alpha = this.nonMoneyAlpha;
       }
     }
   }
 
   /**
-   * Spin and land on `stop`, whose three rows show `landed` labels (engine values
-   * for MBs, null elsewhere). `distance` is how many symbols pass at full speed.
+   * Spin and land on `stop`, whose visible rows show `landed` labels (engine
+   * values for MBs, null elsewhere). `distance` is how many symbols pass at full speed.
    */
   async spinTo(stop: number, landed: (CoinLabel | null)[], delayMs: number, distance: number, isAnticipating?: () => void) {
     await this.anim.wait(delayMs);
@@ -121,10 +114,10 @@ export class ReelView extends Container {
     const p0 = this.pos;
     await this.anim.tween(110, (t) => { this.pos = p0 + 0.3 * t; this.render(); }, easeInCubic);
     // Full speed. The jump to the run-in position happens at speed, so it isn't visible.
-    // New cosmetic values for everything scrolling past, and the engine's values for the landing window.
+    // Fresh cosmetic values for everything scrolling past; the engine's values for the landing window.
     this.labels.clear();
     this.setLanded(stop, landed);
-    this.blur.strengthY = 10;
+    this.blur.strengthY = SPIN_BLUR;
     isAnticipating?.();
     const start = stop + distance + 0.5;
     const end = stop + 0.5;

@@ -27,7 +27,16 @@ export interface Views {
 export class Presenter {
   turbo = false;
 
-  constructor(private readonly cfg: GameConfig, private readonly v: Views, private readonly anim: Anim) {}
+  /**
+   * @param waitForSpin Resolves when the player presses SPIN. Hold & Spin waits
+   *   for it before every respin; `prompt` is shown under the reels meanwhile.
+   */
+  constructor(
+    private readonly cfg: GameConfig,
+    private readonly v: Views,
+    private readonly anim: Anim,
+    private readonly waitForSpin: (prompt: string) => Promise<void>,
+  ) {}
 
   private get t() {
     return this.turbo || this.anim.skipping;
@@ -37,7 +46,7 @@ export class Presenter {
     const { v, cfg } = this;
     v.meters.show(result.metersAtStart);
     v.hud.setWin(0);
-    v.message.set(result.mbTable > 0 ? `${cfg.mbTables[result.mbTable].name.toUpperCase()} COIN VALUES` : '');
+    v.message.set('');
 
     let shown = 0;
     let fgTotal = 0;
@@ -45,6 +54,7 @@ export class Presenter {
     let baseMb: MbLanding[] = [];
     v.grid.setMbTable(result.mbTable);
     let locks: Lock[] = [];
+    let respinsLeft = 0;
     const addWin = (n: number) => { shown += n; v.hud.setWin(shown); };
 
     for (const e of result.events) {
@@ -69,7 +79,10 @@ export class Presenter {
           if (e.lineWins.length) {
             addWin(e.lineTotal);
             if (e.mode === 'base') v.message.set(`WIN ${money(e.lineTotal)}`);
+            else v.message.set(`FREE GAME ${e.freeGame} OF ${fgTotal} · WIN ${money(e.lineTotal)}`);
             await v.grid.showLineWins(e.lineWins, this.t ? 400 : 1100);
+            // Free games play on their own, so give each winning line a moment before the next spin.
+            if (e.mode === 'free' && !this.t) await v.grid.cycleLines(e.lineWins, 650);
           }
           if (e.scatterCount >= cfg.fgTriggerCount) {
             addWin(e.scatterPay);
@@ -81,6 +94,8 @@ export class Presenter {
           }
           if (e.hnsTrigger) await v.grid.pulse(cellsOf(e.grid, cfg.money), this.t ? 400 : 1000);
           v.grid.clearWins();
+          // A short pause after a free game with no win, so the spins don't run together.
+          if (e.mode === 'free' && !e.lineWins.length && !e.scatterPay && !e.hnsTrigger) await this.anim.wait(this.t ? 150 : 550);
           break;
         }
 
@@ -101,23 +116,24 @@ export class Presenter {
         case 'hnsStart':
           await v.banner.show('HOLD & SPIN', `${e.respins} RESPINS`, this.t ? 500 : 1300);
           locks = [...e.locks];
-          v.hns.reset();
+          v.hns.reset(e.mbTable);
           v.hns.visible = true;
           v.grid.dimExcept(new Set(), 0);
           await v.hns.lock(e.locks, this.t ? 30 : 110);
           await this.jackpots(e.locks, e.meters);
-          v.message.set(`RESPINS: ${e.respins}`);
+          respinsLeft = e.respins;
           break;
 
         case 'hnsRespin': {
-          const unlocked = e.landed.map((l) => l.cell);
-          await v.hns.respin(unlocked, e.weightedCells, this.t);
+          // The player starts every respin.
+          await this.waitForSpin(`PRESS SPIN · ${respinsLeft} RESPIN${respinsLeft === 1 ? '' : 'S'} LEFT`);
+          v.message.set('');
+          await v.hns.respin(e.landed, e.newLocks, e.weightedCells, this.t);
           if (e.newLocks.length) {
-            await v.hns.lock(e.newLocks, this.t ? 20 : 90);
             locks.push(...e.newLocks);
             await this.jackpots(e.newLocks, e.meters);
           }
-          v.message.set(e.respinsLeft > 0 ? `RESPINS: ${e.respinsLeft}` : '');
+          respinsLeft = e.respinsLeft;
           break;
         }
 

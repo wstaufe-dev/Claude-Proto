@@ -4,6 +4,7 @@ import type { GameConfig, LineWin, MbLanding, MbPrize, WeightedTable } from '../
 import type { SymbolArt } from '../art/symbols.ts';
 import { C, CELL_H, CELL_W, GRID_H, GRID_W, REELS, ROWS } from '../art/theme.ts';
 import { easeInOutSine, type Anim } from './anim.ts';
+import { cosmeticLabel, prizeLabel } from './coins.ts';
 import { ReelView, type CoinLabel, type ReelArt } from './ReelView.ts';
 
 export class GridView extends Container {
@@ -24,8 +25,8 @@ export class GridView extends Container {
     const reelArt: ReelArt = {
       symbol: (s) => art.symbol(cfg.symbols[s]),
       isMoney: (s) => s === cfg.money,
-      jackpotCoin: (n) => art.jackpotCoin(n),
-      randomLabel: () => this.toLabel(this.prizeTable.items[this.prizeTable.indexFor(Math.floor(Math.random() * this.prizeTable.total))]),
+      coin: (l) => art.coinFor(l),
+      randomLabel: () => cosmeticLabel(cfg, this.prizeTable),
     };
     for (let r = 0; r < REELS; r++) {
       const reel = new ReelView(cfg.baseReels[r], reelArt, anim);
@@ -52,7 +53,7 @@ export class GridView extends Container {
   }
 
   private toLabel(p: MbPrize): CoinLabel {
-    return p.kind === 'credits' ? { credits: p.credits } : { jackpot: this.cfg.jackpots[p.jackpot].name };
+    return prizeLabel(this.cfg, p);
   }
 
   /** Coin labels for each reel's three visible rows (null where there is no MB). */
@@ -61,6 +62,7 @@ export class GridView extends Container {
     for (const m of mbPrizes) out[Math.floor(m.cell / ROWS)][m.cell % ROWS] = this.toLabel(m.prize);
     return out;
   }
+
 
   setMode(mode: 'base' | 'free', stops = this.stops, mbPrizes: MbLanding[] = []) {
     const strips = mode === 'base' ? this.cfg.baseReels : this.cfg.fgReels;
@@ -123,6 +125,12 @@ export class GridView extends Container {
       for (let r = 0; r < w.count; r++) cells.add(r * ROWS + rows[r]);
     }
     await this.pulse([...cells], ms);
+  }
+
+  /** Shows each winning line on its own, one after another. */
+  async cycleLines(wins: LineWin[], perLineMs: number) {
+    for (const w of wins) await this.showLineWins([w], perLineMs);
+    this.clearWins();
   }
 
   async pulse(cells: number[], ms: number) {

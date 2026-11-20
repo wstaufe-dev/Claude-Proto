@@ -6,8 +6,11 @@
  *   { "symbols": { "M1": "symbols/m1.png" }, "coin": "symbols/coin.png" }
  * Paths are relative to web/public/assets/. Missing entries fall back to the art here.
  */
-import { Assets, Container, FillGradient, Graphics, Text, Texture, type Renderer } from 'pixi.js';
+import { Assets, Container, FillGradient, Graphics, Sprite, Text, Texture, type Renderer } from 'pixi.js';
 import { C, CELL_H, CELL_W, FONT_CN, FONT_TITLE } from './theme.ts';
+
+/** What a money ball shows: a credit value, or a jackpot name. */
+export type CoinLabel = { credits: number } | { jackpot: string };
 
 export interface SymbolArt {
   /** Texture for a reel symbol by name (M1…F5, WW, SC1, MB). */
@@ -20,6 +23,10 @@ export interface SymbolArt {
   jackpotCoin(name: string): Texture;
   /** Empty Hold & Spin position. */
   emptyCell: Texture;
+  /** Coin with its value baked in (cached; pre-render known values with prebake). */
+  coinFor(label: CoinLabel): Texture;
+  /** Pre-renders coins for these credit values so spinning reels never render text. */
+  prebake(creditValues: number[]): void;
 }
 
 interface Manifest {
@@ -211,6 +218,7 @@ export async function createSymbolArt(renderer: Renderer): Promise<SymbolArt> {
   const jackpots: Record<string, Texture> = {};
   for (const n of ['Mini', 'Minor', 'Major', 'Grand']) jackpots[n] = await load(manifest.jackpotCoins?.[n], () => jackpotCoin(n));
   const empty = await load(manifest.emptyCell, emptyCell);
+  const valued = new Map<number, Texture>();
 
   return {
     symbol: (name) => symbols[name] ?? Texture.WHITE,
@@ -218,7 +226,27 @@ export async function createSymbolArt(renderer: Renderer): Promise<SymbolArt> {
     valueCoin: valueTex,
     jackpotCoin: (name) => jackpots[name] ?? coinTex,
     emptyCell: empty,
+    coinFor,
+    prebake: (values) => values.forEach((v) => coinFor({ credits: v })),
   };
+
+  function coinFor(label: CoinLabel): Texture {
+    if ('jackpot' in label) return jackpots[label.jackpot] ?? coinTex;
+    let tex = valued.get(label.credits);
+    if (!tex) {
+      const c = new Container();
+      const t = new Text({
+        text: label.credits.toLocaleString('en-US'),
+        style: { fontFamily: FONT_TITLE, fontSize: label.credits >= 1000 ? 24 : 28, fontWeight: '900', fill: C.cream, stroke: { color: C.ink, width: 5, join: 'round' }, padding: 8 },
+      });
+      t.anchor.set(0.5);
+      t.position.set(W / 2, H / 2 + 2);
+      c.addChild(new Sprite(valueTex), t);
+      tex = bakeFixed(bake, c);
+      valued.set(label.credits, tex);
+    }
+    return tex;
+  }
 }
 
 /** Bakes a cell-sized texture regardless of the content's own bounds (keeps every symbol aligned). */

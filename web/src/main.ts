@@ -13,6 +13,7 @@ import { Anim } from './view/anim.ts';
 import { Background, Banner, Hud, MessageBar, Meters, Title } from './view/chrome.ts';
 import { GridView } from './view/GridView.ts';
 import { HnsView } from './view/HnsView.ts';
+import { allCreditValues } from './view/coins.ts';
 import { Particles } from './view/Particles.ts';
 import { glowTexture, Pot } from './view/Pot.ts';
 
@@ -62,7 +63,20 @@ meters.show(state.meters);
 hud.setBalance(state.credits);
 message.set('PRESS SPIN TO PLAY');
 
-const presenter = new Presenter(cfg, { background, grid, hns, meters, message, banner, hud, pot, particles }, anim);
+/** Set while Hold & Spin is waiting for the player to press SPIN. */
+let spinWaiter: (() => void) | null = null;
+const waitForSpin = (prompt: string) => new Promise<void>((resolve) => {
+  anim.skipping = false; // a skip earlier in the round doesn't carry into the respins
+  message.set(prompt);
+  hud.setSpinState('ready');
+  spinWaiter = () => {
+    spinWaiter = null;
+    hud.setSpinState('busy');
+    resolve();
+  };
+});
+art.prebake(allCreditValues(cfg));
+const presenter = new Presenter(cfg, { background, grid, hns, meters, message, banner, hud, pot, particles }, anim, waitForSpin);
 
 let forced: Scenario | null = null;
 let forcedTable: number | undefined;
@@ -84,6 +98,7 @@ function refreshSpin() {
 refreshSpin();
 
 async function spin() {
+  if (spinWaiter) { spinWaiter(); return; }
   if (busy) { anim.skipping = true; return; }
   if (state.credits < cfg.bet) { message.set(state.credits === 0 ? 'PRESS CASH IN TO PLAY' : 'INSUFFICIENT CREDITS'); return; }
 
@@ -136,4 +151,4 @@ window.addEventListener('keydown', (e) => {
 });
 
 // For debugging in the console.
-Object.assign(window, { game: { cfg, state } });
+Object.assign(window, { game: { cfg, state, waitingForSpin: () => spinWaiter !== null } });
