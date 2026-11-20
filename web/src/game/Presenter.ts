@@ -52,9 +52,9 @@ export class Presenter {
         case 'spin': {
           if (e.mode === 'base') { baseStops = e.stops; baseMb = e.mbPrizes; }
           else v.message.set(`FREE GAME ${e.freeGame} OF ${fgTotal}`);
-          // In the base game, each coin that lands sends sparks up into the pot as its reel stops.
+          // In the base game and free games, each coin that lands sends sparks up into the pot as its reel stops.
           const flights: Promise<void>[] = [];
-          const onReelStop = e.mode === 'base' && e.mbPrizes.length
+          const onReelStop = e.mbPrizes.length
             ? (reel: number) => {
               for (const m of e.mbPrizes) {
                 if (Math.floor(m.cell / ROWS) !== reel) continue;
