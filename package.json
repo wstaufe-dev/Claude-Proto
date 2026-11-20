@@ -1,0 +1,21 @@
+{
+  "name": "claude-proto",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Slot prototype: shared math engine, Monte Carlo simulator and (later) PixiJS presentation.",
+  "scripts": {
+    "export-config": "tsx tools/export-config.ts",
+    "sim": "tsx src/sim/cli.ts",
+    
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "exceljs": "4.4.0",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vitest": "4.1.12"
+  }
+}
