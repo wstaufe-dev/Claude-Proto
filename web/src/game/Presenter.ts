@@ -3,7 +3,7 @@
  * only values carried by those events; it never recalculates an outcome.
  */
 import type { GameConfig, Lock, MbLanding, RoundResult } from '../../../src/engine/index.ts';
-import { credits } from '../art/theme.ts';
+import { money } from '../art/theme.ts';
 import type { Anim } from '../view/anim.ts';
 import type { Background, Banner, Hud, MessageBar, Meters } from '../view/chrome.ts';
 import type { GridView } from '../view/GridView.ts';
@@ -68,7 +68,7 @@ export class Presenter {
           await Promise.all(flights);
           if (e.lineWins.length) {
             addWin(e.lineTotal);
-            if (e.mode === 'base') v.message.set(`WIN ${credits(e.lineTotal)}`);
+            if (e.mode === 'base') v.message.set(`WIN ${money(e.lineTotal)}`);
             await v.grid.showLineWins(e.lineWins, this.t ? 400 : 1100);
           }
           if (e.scatterCount >= cfg.fgTriggerCount) {
@@ -76,7 +76,7 @@ export class Presenter {
             await v.grid.pulse(cellsOf(e.grid, cfg.scatter), this.t ? 400 : 1000);
             if (e.mode === 'free' && e.freeGamesAwarded) {
               fgTotal += e.freeGamesAwarded;
-              await v.banner.show(`+${e.freeGamesAwarded} FREE GAMES`, e.scatterPay ? `+${credits(e.scatterPay)}` : '', this.t ? 400 : 1100);
+              await v.banner.show(`+${e.freeGamesAwarded} FREE GAMES`, e.scatterPay ? `+${money(e.scatterPay)}` : '', this.t ? 400 : 1100);
             }
           }
           if (e.hnsTrigger) await v.grid.pulse(cellsOf(e.grid, cfg.money), this.t ? 400 : 1000);
@@ -123,7 +123,7 @@ export class Presenter {
 
         case 'hnsEnd': {
           let running = 0;
-          await v.hns.collect(locks, (amount) => { running += amount; v.message.set(`TOTAL ${credits(running)}`); }, this.t);
+          await v.hns.collect(locks, (amount) => { running += amount; v.message.set(`TOTAL ${money(running)}`); }, this.t);
           if (e.grand > 0) {
             v.meters.show(e.meters);
             await v.banner.countUp('GRAND JACKPOT', e.grand, this.t ? 600 : 3000);
@@ -141,7 +141,7 @@ export class Presenter {
           if (shown !== e.totalWin) console.error(`Presentation showed ${shown} but the round paid ${e.totalWin}`);
           v.hud.setWin(e.totalWin);
           if (e.totalWin >= cfg.bet * 20 && !this.t) await v.banner.countUp(bigWinTitle(e.totalWin / cfg.bet), e.totalWin, 2200);
-          v.message.set(e.totalWin > 0 ? `WIN ${credits(e.totalWin)}` : '');
+          v.message.set(e.totalWin > 0 ? `WIN ${money(e.totalWin)}` : '');
           break;
       }
     }
@@ -152,7 +152,7 @@ export class Presenter {
       if (l.prize.kind !== 'jackpot') continue;
       const name = this.cfg.jackpots[l.prize.jackpot].name;
       void this.v.meters.flash(l.prize.jackpot);
-      await this.v.banner.show(`${name.toUpperCase()} JACKPOT`, credits(l.amount), this.t ? 400 : 1300);
+      await this.v.banner.show(`${name.toUpperCase()} JACKPOT`, money(l.amount), this.t ? 400 : 1300);
     }
     this.v.meters.show(meters);
   }

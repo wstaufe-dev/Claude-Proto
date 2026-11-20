@@ -1,7 +1,7 @@
 {
   "source": {
     "file": "Proto_v2.xlsx",
-    "sha256": "2d7e958ab221ce9adf9a073435abb4e83e9d4b5ecf5a8b219f3b438e544871e0"
+    "sha256": "e1ecf2bf0f751b631e13379066bd6288991ca1f3a862f81254dee2f61fc119e7"
   },
   "symbols": [
     "M1",
@@ -1705,6 +1705,7 @@
     "HnS Auto Trigger MB": 6,
     "HnS Respins": 3,
     "HnS Weighted Positions": 1,
-    "Grand MB Count": 15
+    "Grand MB Count": 15,
+    "Denomination Cents": 1
   }
 }

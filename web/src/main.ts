@@ -5,7 +5,7 @@ import {
   type RandomSource, type RawConfig, type RoundOptions,
 } from '../../src/engine/index.ts';
 import { createSymbolArt } from './art/symbols.ts';
-import { DESIGN_H, DESIGN_W, GRID_X, GRID_Y } from './art/theme.ts';
+import { DESIGN_H, DESIGN_W, GRID_X, GRID_Y, money, setDenomination } from './art/theme.ts';
 import { findStops, type Scenario } from './debug/force.ts';
 import { DebugPanel } from './debug/panel.ts';
 import { Presenter } from './game/Presenter.ts';
@@ -20,6 +20,7 @@ import { glowTexture, Pot } from './view/Pot.ts';
 const CASH_IN = 5_000;
 
 const cfg = loadConfig(raw as RawConfig);
+setDenomination(cfg.denomCents);
 const state = createState(cfg, 0);
 cashIn(state, CASH_IN);
 let rng: RandomSource = new CryptoRandom();
@@ -118,7 +119,7 @@ hud.cashInButton.on('pointertap', () => {
   cashIn(state, CASH_IN);
   hud.setBalance(state.credits);
   hud.setWin(0);
-  message.set(`CASHED IN ${CASH_IN.toLocaleString('en-US')}`);
+  message.set(`CASHED IN ${money(CASH_IN)}`);
   refreshSpin();
 });
 hud.cashOutButton.on('pointertap', async () => {

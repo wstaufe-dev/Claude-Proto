@@ -76,6 +76,8 @@ export interface GameConfig {
   jackpots: Jackpot[];
   grandJackpot: number;
   bet: number;
+  /** Value of one credit in cents (1 = a 1¢ game). Presentation only; the engine works in credits. */
+  denomCents: number;
   fgTriggerCount: number;
   fgAward: number;
   fgRetriggerAward: number;
@@ -101,7 +103,7 @@ const MAX_WEIGHT_TOTAL = 2 ** 31;
 
 const REQUIRED_SETTINGS = [
   'Bet', 'Lines', 'FG Trigger SC1', 'FG Award', 'FG Retrigger Award',
-  'HnS Auto Trigger MB', 'HnS Respins', 'HnS Weighted Positions', 'Grand MB Count',
+  'HnS Auto Trigger MB', 'HnS Respins', 'HnS Weighted Positions', 'Grand MB Count', 'Denomination Cents',
 ] as const;
 
 export function loadConfig(raw: RawConfig): GameConfig {
@@ -274,6 +276,7 @@ export function loadConfig(raw: RawConfig): GameConfig {
     jackpots,
     grandJackpot: jackpotIndex[GRAND],
     bet,
+    denomCents: settings['Denomination Cents'],
     fgTriggerCount: settings['FG Trigger SC1'],
     fgAward: settings['FG Award'],
     fgRetriggerAward: settings['FG Retrigger Award'],

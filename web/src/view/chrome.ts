@@ -1,6 +1,6 @@
 /** Background, title, jackpot meters, message bar, banner and HUD (portrait layout). */
 import { Container, FillGradient, Graphics, Text } from 'pixi.js';
-import { C, credits, DESIGN_H, DESIGN_W, FONT_TITLE, FONT_UI, GRID_H, GRID_Y } from '../art/theme.ts';
+import { C, money, DESIGN_H, DESIGN_W, FONT_TITLE, FONT_UI, GRID_H, GRID_Y } from '../art/theme.ts';
 import { easeOutBack, easeOutCubic, linear, type Anim } from './anim.ts';
 
 const vgrad = (a: number, b: number) =>
@@ -105,7 +105,7 @@ class Plaque extends Container {
     this.pivot.set(w / 2, h / 2);
   }
   set(amount: number) {
-    this.value.text = credits(amount);
+    this.value.text = money(amount);
   }
 }
 
@@ -187,8 +187,8 @@ export class Banner extends Container {
     this.visible = true;
     this.alpha = 1;
     this.title.scale.set(1);
-    await this.anim.tween(ms, (t) => (this.sub.text = credits(amount * t)), easeOutCubic);
-    this.sub.text = credits(amount);
+    await this.anim.tween(ms, (t) => (this.sub.text = money(amount * t)), easeOutCubic);
+    this.sub.text = money(amount);
     await this.anim.wait(900);
     await this.anim.tween(250, (t) => (this.alpha = 1 - t), easeOutCubic);
     this.visible = false;
@@ -218,7 +218,7 @@ export class Hud extends Container {
       return v;
     };
     this.balance = field('BALANCE', 92);
-    field('BET', 206).text = credits(bet);
+    field('BET', 206).text = money(bet);
     this.win = field('WIN', 326);
 
     const pill = (label: string, cy: number) => {
@@ -246,12 +246,12 @@ export class Hud extends Container {
     this.addChild(this.spinButton);
   }
 
-  setBalance(n: number) { this.balance.text = credits(n); }
+  setBalance(n: number) { this.balance.text = money(n); }
   /** Cash buttons work only between rounds. */
   setCashEnabled(on: boolean) {
     for (const b of [this.cashInButton, this.cashOutButton]) { b.alpha = on ? 1 : 0.4; b.eventMode = on ? 'static' : 'none'; }
   }
-  setWin(n: number) { this.win.text = n > 0 ? credits(n) : ''; }
+  setWin(n: number) { this.win.text = n > 0 ? money(n) : ''; }
 
   /** 'ready' = can spin, 'busy' = tap to speed up, 'disabled' = no credits. */
   setSpinState(s: 'ready' | 'busy' | 'disabled') {

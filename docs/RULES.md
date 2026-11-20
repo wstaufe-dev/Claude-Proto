@@ -8,6 +8,9 @@ amounts are in credits (cr).
 
 - 5 reels × 3 rows, 25 fixed paylines (`Lines` table; row 0 is the top).
 - Fixed bet: **80 cr** per paid spin (`Setting: Bet`).
+- Denomination: **1¢** per credit (`Setting: Denomination Cents`), so the bet
+  is $0.80. The engine works in credits. The game shows the jackpot meters,
+  balance, bet, wins and banners in dollars; coin values stay in credits.
 - There is no credits-per-line multiplier. Each winning line pays its `Pays`
   table value in credits, and scatter awards are also paid in credits.
 

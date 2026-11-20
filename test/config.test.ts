@@ -14,6 +14,7 @@ describe('loadConfig on the exported workbook', () => {
     expect(cfg.hnsReel).toHaveLength(100);
     expect(cfg.hnsReel.filter((s) => s === cfg.money)).toHaveLength(12); // 12% MB per unweighted position
     expect(cfg.bet).toBe(80);
+    expect(cfg.denomCents).toBe(1);
   });
 
   it('maps pays and scatter pays', () => {

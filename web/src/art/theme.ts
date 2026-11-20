@@ -38,3 +38,10 @@ export const FONT_UI = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif
 
 /** Whole credits with thousands separators. */
 export const credits = (n: number) => Math.floor(n).toLocaleString('en-US');
+
+let denomCents = 1;
+/** Sets the value of one credit in cents (from the game config). */
+export const setDenomination = (cents: number) => { denomCents = cents; };
+/** Credits shown as dollars at the game's denomination, e.g. 80 cr at 1¢ → "$0.80". */
+export const money = (creditsAmount: number) =>
+  '$' + ((Math.floor(creditsAmount) * denomCents) / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
