@@ -38,7 +38,7 @@ describe('loadConfig on the exported workbook', () => {
     }
   });
 
-  it('averages Mid ≈ 5× and High ≈ 20× the Low credit value, using the Low values', () => {
+  it('averages Mid ≈ 5× and High ≈ 20× the Low credit value; Mid uses the Low values, High a wider range', () => {
     const avgCredits = (i: number) => {
       const t = cfg.mbTables[i].prizes;
       let sum = 0, w = 0;
@@ -49,7 +49,8 @@ describe('loadConfig on the exported workbook', () => {
     expect(avgCredits(2) / avgCredits(0)).toBeCloseTo(20, 1);
     const values = (i: number) => cfg.mbTables[i].prizes.items.map((p) => JSON.stringify(p));
     expect(values(1)).toEqual(values(0));
-    expect(values(2)).toEqual(values(0));
+    const credits = (i: number) => cfg.mbTables[i].prizes.items.filter((p) => p.kind === 'credits').length;
+    expect(credits(2)).toBeGreaterThan(credits(0));
   });
 
   it('draws Low/Mid/High 85/10/5', () => {

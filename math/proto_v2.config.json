@@ -1,7 +1,7 @@
 {
   "source": {
     "file": "Proto_v2.xlsx",
-    "sha256": "e1ecf2bf0f751b631e13379066bd6288991ca1f3a862f81254dee2f61fc119e7"
+    "sha256": "2a0091a06215e676d752a5cd661a1f829e8944e0a91009b1439ba827178050e3"
   },
   "symbols": [
     "M1",
@@ -1462,51 +1462,51 @@
       "rows": [
         {
           "entry": 40,
-          "weight": 1515
+          "weight": 3927
         },
         {
           "entry": 80,
-          "weight": 294
+          "weight": 764
         },
         {
           "entry": 160,
-          "weight": 79
+          "weight": 205
         },
         {
           "entry": 240,
-          "weight": 28
+          "weight": 74
         },
         {
           "entry": 320,
-          "weight": 30
+          "weight": 79
         },
         {
           "entry": 400,
-          "weight": 98
+          "weight": 255
         },
         {
           "entry": 800,
-          "weight": 46
+          "weight": 122
         },
         {
           "entry": 1200,
-          "weight": 3
+          "weight": 7
         },
         {
           "entry": 1600,
-          "weight": 4
-        },
-        {
-          "entry": 4000,
-          "weight": 31
-        },
-        {
-          "entry": "Mini",
           "weight": 10
         },
         {
+          "entry": 4000,
+          "weight": 90
+        },
+        {
+          "entry": "Mini",
+          "weight": 26
+        },
+        {
           "entry": "Minor",
-          "weight": 3
+          "weight": 8
         },
         {
           "entry": "Major",
@@ -1519,51 +1519,51 @@
       "rows": [
         {
           "entry": 40,
-          "weight": 1228
+          "weight": 3159
         },
         {
           "entry": 80,
-          "weight": 245
+          "weight": 631
         },
         {
           "entry": 160,
-          "weight": 69
+          "weight": 179
         },
         {
           "entry": 240,
-          "weight": 26
+          "weight": 67
         },
         {
           "entry": 320,
-          "weight": 30
+          "weight": 76
         },
         {
           "entry": 400,
-          "weight": 101
+          "weight": 260
         },
         {
           "entry": 800,
-          "weight": 62
+          "weight": 162
         },
         {
           "entry": 1200,
-          "weight": 5
+          "weight": 12
         },
         {
           "entry": 1600,
-          "weight": 9
+          "weight": 23
         },
         {
           "entry": 4000,
-          "weight": 353
+          "weight": 964
         },
         {
           "entry": "Mini",
-          "weight": 10
+          "weight": 26
         },
         {
           "entry": "Minor",
-          "weight": 3
+          "weight": 8
         },
         {
           "entry": "Major",
@@ -1575,52 +1575,64 @@
       "name": "High",
       "rows": [
         {
-          "entry": 40,
-          "weight": 344
-        },
-        {
-          "entry": 80,
-          "weight": 71
-        },
-        {
           "entry": 160,
-          "weight": 21
+          "weight": 304
         },
         {
           "entry": 240,
-          "weight": 8
+          "weight": 307
         },
         {
           "entry": 320,
-          "weight": 10
+          "weight": 310
         },
         {
           "entry": 400,
-          "weight": 36
+          "weight": 314
         },
         {
           "entry": 800,
-          "weight": 30
+          "weight": 331
         },
         {
           "entry": 1200,
-          "weight": 3
+          "weight": 348
         },
         {
           "entry": 1600,
-          "weight": 7
+          "weight": 367
+        },
+        {
+          "entry": 2000,
+          "weight": 387
+        },
+        {
+          "entry": 2400,
+          "weight": 408
+        },
+        {
+          "entry": 3200,
+          "weight": 453
         },
         {
           "entry": 4000,
-          "weight": 1598
+          "weight": 503
+        },
+        {
+          "entry": 6000,
+          "weight": 653
+        },
+        {
+          "entry": 8000,
+          "weight": 848
         },
         {
           "entry": "Mini",
-          "weight": 10
+          "weight": 26
         },
         {
           "entry": "Minor",
-          "weight": 3
+          "weight": 8
         },
         {
           "entry": "Major",

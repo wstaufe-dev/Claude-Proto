@@ -61,7 +61,11 @@ export class Presenter {
       switch (e.type) {
         case 'spin': {
           if (e.mode === 'base') { baseStops = e.stops; baseMb = e.mbPrizes; }
-          else v.message.set(`FREE GAME ${e.freeGame} OF ${fgTotal}`);
+          else {
+            // A slam only speeds up the free game in progress, never the rest of the session.
+            this.anim.skipping = false;
+            v.message.set(`FREE GAME ${e.freeGame} OF ${fgTotal}`);
+          }
           // In the base game and free games, each coin that lands sends sparks up into the pot as its reel stops.
           const flights: Promise<void>[] = [];
           const onReelStop = e.mbPrizes.length
@@ -100,6 +104,7 @@ export class Presenter {
         }
 
         case 'freeGamesStart':
+          this.anim.skipping = false;
           fgTotal = e.games;
           await v.banner.show('FREE GAMES', `${e.games} FREE GAMES`, this.t ? 500 : 1400);
           v.background.draw(true);
@@ -107,6 +112,7 @@ export class Presenter {
           break;
 
         case 'freeGamesEnd':
+          this.anim.skipping = false;
           await v.banner.countUp('FREE GAMES WIN', e.total, this.t ? 400 : 1500);
           v.background.draw(false);
           v.grid.setMode('base', baseStops, baseMb);

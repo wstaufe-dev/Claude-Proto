@@ -99,28 +99,33 @@ open position almost never fills.
 
 ### MB tables
 
-All three tables have the same entries as Low: credit values 40, 80, 160,
-240, 320, 400, 800, 1 200, 1 600 and 4 000, plus Mini, Minor and Major. Only
-the weights differ.
+Low and Mid share the credit values 40 – 4 000. High uses a wider ladder,
+160 – 8 000, so High coins vary instead of mostly showing 4 000.
 
 | Credits | Low | Mid | High |
 |---|---|---|---|
-| 40 | 1 515 | 1 228 | 344 |
-| 80 | 294 | 245 | 71 |
-| 160 | 79 | 69 | 21 |
-| 240 | 28 | 26 | 8 |
-| 320 | 30 | 30 | 10 |
-| 400 | 98 | 101 | 36 |
-| 800 | 46 | 62 | 30 |
-| 1 200 | 3 | 5 | 3 |
-| 1 600 | 4 | 9 | 7 |
-| 4 000 | 31 | 353 | 1 598 |
-| Mini / Minor / Major | 10 / 3 / 1 | 10 / 3 / 1 | 10 / 3 / 1 |
-| **Average credit value** | **152 cr** | **760 cr (5.0×)** | **3042 cr (20.0×)** |
+| 40 | 3 927 | 3 159 | – |
+| 80 | 764 | 631 | – |
+| 160 | 205 | 179 | 304 |
+| 240 | 74 | 67 | 307 |
+| 320 | 79 | 76 | 310 |
+| 400 | 255 | 260 | 314 |
+| 800 | 122 | 162 | 331 |
+| 1 200 | 7 | 12 | 348 |
+| 1 600 | 10 | 23 | 367 |
+| 2 000 | – | – | 387 |
+| 2 400 | – | – | 408 |
+| 3 200 | – | – | 453 |
+| 4 000 | 90 | 964 | 503 |
+| 6 000 | – | – | 653 |
+| 8 000 | – | – | 848 |
+| Mini / Minor / Major | 26 / 8 / 1 | 26 / 8 / 1 | 26 / 8 / 1 |
+| **Average credit value** | **159 cr** | **793 cr (5.0×)** | **3169 cr (20.0×)** |
 | **Draw weight** | **85** | **10** | **5** |
 
-Every table's credit weights total 2 128, so the chance of drawing a jackpot
-is the same in all three: 14 in 2 142 per MB.
+Every table's credit weights total 5 533, and each has Mini 26, Minor 8 and
+Major 1. The jackpot odds per MB are therefore the same in all three: the
+Major is 1 in 5 568 per MB, about 1 in 54 000 rounds overall.
 
 ## 6. Jackpots
 
@@ -145,12 +150,13 @@ Measured over 100 million simulated rounds (two 50M-round seeds), at a bet of
 
 | | Target | Result |
 |---|---|---|
-| Total RTP | 90% | 89.8% ± 0.3% |
+| Total RTP | 90% | 89.7% ± 0.3% |
 | Base game (lines + scatter pays) | ≈ 35% | 35.7% (exact) |
 | Free games trigger | ≈ 1 in 120 | 1 in 121 (exact) |
 | Hold & Spin trigger (base game) | ≈ 1 in 120 | 1 in 120 (exact) |
-| Free-game bonuses that reach Hold & Spin | ≈ 1 in 6 | 1 in 6.05 |
+| Free-game bonuses that reach Hold & Spin | ≈ 1 in 6 | 1 in 6.0 |
 | MB chance per unweighted Hold & Spin position | ≈ 12% | 12% |
+| Major jackpot | ≈ 1 in 50 000 rounds | 1 in 54 000 |
 
 ### Where the return comes from
 
@@ -158,8 +164,10 @@ Measured over 100 million simulated rounds (two 50M-round seeds), at a bet of
 |---|---|
 | Base game lines + scatter | 35.7% |
 | Free games lines + scatter | 1.7% |
-| Hold & Spin credits (base / in FG) | 40.3% / 6.7% |
-| Mini / Minor / Major / Grand | 0.6% / 0.5% / 3.7% / 0.7% |
+| Hold & Spin credits (base / in FG) | 41.7% / 6.9% |
+| Mini / Minor / Major / Grand | 0.6% / 0.5% / 1.9% / 0.8% |
 
-- Standard deviation per round is about 16× bet.
-- The Grand hit 44 times in 100M rounds, so its share is only approximate.
+- Average Hold & Spin award by table: Low 25×, Mid 111×, High 432× bet.
+- Standard deviation per round is about 17× bet.
+- The Grand hit 50 times in 100M rounds (about 1 in 2 million), so its share
+  is only approximate.
