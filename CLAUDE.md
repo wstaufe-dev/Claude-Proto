@@ -22,4 +22,10 @@ Do this without being asked, and tell the user it was republished.
 ## Working rules
 
 - Math data lives in `math/Proto_v2.xlsx`; rules in `docs/RULES.md`. Keep both in sync.
+- If `math/Proto_v2.xlsm` exists, it replaces the `.xlsx` and holds the Excel
+  tool macros (source: `tools/excel/ProtoTools.bas`). Edit it only with a tool
+  that keeps the VBA project (e.g. openpyxl with `keep_vba=True`); ExcelJS
+  drops macros, so never write the workbook back with ExcelJS.
+- `Setup.bat`, `Play Prototype.bat`, `Run Simulation.bat` and the `.bas` file
+  must keep CRLF line endings (`.gitattributes` marks them `-text`).
 - All award logic belongs in `src/engine/`; `web/` only animates engine events.

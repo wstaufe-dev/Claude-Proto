@@ -5,9 +5,10 @@
  *
  * Each worker runs its own SeededRandom stream (seed, workerIndex), so a
  * given (seed, workers, rounds) always gives the same result.
- * Writes a JSON report to reports/.
+ * Writes a JSON report and a tab-delimited text report to reports/, and
+ * copies the text report to reports/sim-latest.txt for the Excel import.
  */
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { availableParallelism } from 'node:os';
 import { Worker } from 'node:worker_threads';
 import { exactBase } from './exact.ts';
@@ -66,12 +67,26 @@ const oneIn = (hits: number, of = N) => (hits ? `1 in ${fmt(of / hits)}` : `none
 const fmt = (x: number) => (x >= 100 ? Math.round(x).toLocaleString('en-US') : x.toFixed(2));
 const int = (x: number) => x.toLocaleString('en-US');
 const pad = (t: string, n: number) => t.padEnd(n);
-const row = (label: string, ...cols: string[]) => console.log('  ' + pad(label, 26) + cols.map((c) => c.padStart(16)).join(''));
+
+// Every report line goes to the console and, as Section / Item / columns, to the text report.
+const tsv: string[][] = [];
+let section = 'RUN';
+const heading = (title: string) => { console.log(`\n${title}`); section = title; };
+const row = (label: string, ...cols: string[]) => {
+  console.log('  ' + pad(label, 26) + cols.map((c) => c.padStart(16)).join(''));
+  tsv.push([section, label.trim(), ...cols]);
+};
+const note = (text: string, ...cols: string[]) => { console.log(text); tsv.push([section, text.trim().replace(/:$/, ''), ...cols]); };
 
 console.log(`\n${cfg.sourceFile}  (sha256 ${cfg.sourceSha256.slice(0, 12)}…)  seed ${seed}, ${workers} workers`);
-console.log(`${fmt(N)} rounds in ${secs.toFixed(1)} s (${(N / secs / 1e6).toFixed(2)}M rounds/s), bet ${bet} cr\n`);
+console.log(`${fmt(N)} rounds in ${secs.toFixed(1)} s (${(N / secs / 1e6).toFixed(2)}M rounds/s), bet ${bet} cr`);
+tsv.push(['Section', 'Item', 'Value', 'Value 2']);
+tsv.push([section, 'Date', new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC']);
+tsv.push([section, 'Config file', cfg.sourceFile], [section, 'Config sha256', cfg.sourceSha256]);
+tsv.push([section, 'Rounds', String(N)], [section, 'Seed', String(seed)], [section, 'Workers', String(workers)]);
+tsv.push([section, 'Seconds', secs.toFixed(1)], [section, 'Bet (cr)', String(bet)]);
 
-console.log('RETURN TO PLAYER');
+heading('RETURN TO PLAYER');
 row('Total', pct(rtp), `± ${pct(ci)} (95%)`);
 const src: [string, number, number | null][] = [
   ['Base lines', s.baseLines, exact.lineReturn],
@@ -85,7 +100,7 @@ const src: [string, number, number | null][] = [
 row('', 'simulated', 'exact');
 for (const [label, amount, ex] of src) row(label, pct(amount / s.wagered), ex === null ? '' : pct(ex));
 
-console.log('\nFREQUENCIES');
+heading('FREQUENCIES');
 row('', 'simulated', 'exact');
 row('Any win', oneIn(s.hits), '');
 row('Free games trigger', oneIn(s.fgTriggers), `1 in ${fmt(1 / exact.pFreeGames)}`);
@@ -96,24 +111,28 @@ row('Hold & Spin (in FG)', oneIn(s.hnsFreeAuto + s.hnsFreeDraw), '');
 row('FG retriggers', s.fgTriggers ? `${(s.fgRetriggers / s.fgTriggers).toFixed(4)} / trig` : '-', '');
 for (let i = 0; i < cfg.jackpots.length; i++) row(`${cfg.jackpots[i].name} hits`, oneIn(s.jackpotHits[i]), int(s.jackpotHits[i]));
 
-console.log('\nFEATURES');
+heading('FEATURES');
 const hnsCount = s.hnsBaseAuto + s.hnsBaseDraw + s.hnsFreeAuto + s.hnsFreeDraw;
 const fgWin = s.freeLines + s.freeScatter + s.hnsCreditsFree; // + jackpots won inside FG are in jackpotPaid
 row('Avg free games played', s.fgTriggers ? (s.freeSpins / s.fgTriggers).toFixed(2) : '-');
 row('Avg FG lines+scatter+HnS', s.fgTriggers ? `${(fgWin / s.fgTriggers / bet).toFixed(2)} × bet` : '-', 'excl. jackpots');
 row('Avg Hold & Spin award', hnsCount ? `${(s.hnsAward / hnsCount / bet).toFixed(2)} × bet` : '-', 'incl. jackpots');
 row('HnS MB chance / position', `${pct(exact.pMbUnweighted, 2)} unwtd`, `${pct(exact.pMbWeighted, 4)} wtd`);
-console.log('  By MB table:                round share     HnS plays   avg HnS award');
-cfg.mbTables.forEach((t, i) => console.log('    ' + t.name.padEnd(24) + pct(s.mbTableRounds[i] / N, 2).padStart(14) +
-  s.hnsByTable[i].toLocaleString('en-US').padStart(14) + (s.hnsByTable[i] ? `${(s.hnsAwardByTable[i] / s.hnsByTable[i] / bet).toFixed(2)} × bet` : '-').padStart(16)));
-console.log('  Hold & Spin ending positions locked:');
+note('  By MB table:                round share     HnS plays   avg HnS award', 'round share', 'HnS plays', 'avg HnS award');
+cfg.mbTables.forEach((t, i) => {
+  const cols = [pct(s.mbTableRounds[i] / N, 2), s.hnsByTable[i].toLocaleString('en-US'),
+    s.hnsByTable[i] ? `${(s.hnsAwardByTable[i] / s.hnsByTable[i] / bet).toFixed(2)} × bet` : '-'];
+  console.log('    ' + t.name.padEnd(24) + cols[0].padStart(14) + cols[1].padStart(14) + cols[2].padStart(16));
+  tsv.push([section, `MB table ${t.name}`, ...cols]);
+});
+note('  Hold & Spin ending positions locked:');
 const locked = s.hnsLocked.map((n, k) => [k, n] as const).filter(([, n]) => n > 0);
 for (const [k, n] of locked) row(`    ${k}`, `${pct(n / hnsCount, 2)}`, int(n));
 
-console.log('\nVOLATILITY');
+heading('VOLATILITY');
 row('Std dev per round', `${sdX.toFixed(2)} × bet`);
 row('Max round win', `${fmt(s.maxWin / bet)} × bet`, `${fmt(s.maxWin)} cr`);
-console.log('  Round win distribution (× bet):');
+note('  Round win distribution (× bet):');
 s.winBuckets.forEach((n, k) => {
   const label = k === 0 ? '0' : k === 1 ? '(0, 1)' : WIN_BUCKETS[k] === Infinity ? `≥ ${WIN_BUCKETS[k - 1]}` : `[${WIN_BUCKETS[k - 1]}, ${WIN_BUCKETS[k]})`;
   row(`    ${label}`, pct(n / N, 4), int(n));
@@ -125,4 +144,9 @@ writeFileSync(out, JSON.stringify({
   config: { file: cfg.sourceFile, sha256: cfg.sourceSha256 }, seed, workers, seconds: secs,
   rtp, rtpCi95: ci, sdPerRoundX: sdX, exactBase: exact, stats: s,
 }, null, 2));
+const outTxt = out.replace(/\.json$/, '.txt');
+// UTF-8 with a byte-order mark and Windows line endings, so Excel and Notepad read ×, ≥ and ± correctly.
+writeFileSync(outTxt, '\uFEFF' + tsv.map((r) => r.map((c) => c.replace(/[\t\r\n]+/g, ' ')).join('\t')).join('\r\n') + '\r\n');
+copyFileSync(outTxt, 'reports/sim-latest.txt');
 console.log(`\nReport written to ${out}`);
+console.log(`Text report written to ${outTxt} (copied to reports/sim-latest.txt for the Excel import)`);

@@ -6,22 +6,38 @@
  * every rule check and normalisation lives in src/engine/config.ts
  * (loadConfig), so the game and the simulator validate the same way.
  *
- * Usage: npm run export-config [-- <xlsx> <out.json>]
+ * Usage: npm run export-config [-- <workbook> <out.json>]
+ *
+ * The workbook defaults to math/Proto_v2.xlsm (the macro-enabled copy with
+ * the Excel tool buttons) if it exists, otherwise math/Proto_v2.xlsx.
+ * The math sheet is the one with a "Symbols" header in row 1, so other tabs
+ * (Tools, Sim Results) can sit anywhere in the workbook.
  */
 import { createHash } from 'node:crypto';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename } from 'node:path';
 import ExcelJS from 'exceljs';
 import { loadConfig, type RawConfig } from '../src/engine/config.ts';
 
-const [xlsxPath = 'math/Proto_v2.xlsx', outPath = 'math/proto_v2.config.json'] = process.argv.slice(2);
+const defaultWorkbook = existsSync('math/Proto_v2.xlsm') ? 'math/Proto_v2.xlsm' : 'math/Proto_v2.xlsx';
+const [xlsxPath = defaultWorkbook, outPath = 'math/proto_v2.config.json'] = process.argv.slice(2);
 
 type Cell = string | number | null;
 
 const wb = new ExcelJS.Workbook();
 await wb.xlsx.readFile(xlsxPath);
-const ws = wb.worksheets[0];
-if (!ws) throw new Error(`${xlsxPath}: workbook has no sheets`);
+/** True if row 1 of the sheet has a cell reading exactly "Symbols". */
+function isMathSheet(sheet: ExcelJS.Worksheet): boolean {
+  let found = false;
+  sheet.getRow(1).eachCell((c) => { if (typeof c.value === 'string' && c.value.trim() === 'Symbols') found = true; });
+  return found;
+}
+const mathSheets = wb.worksheets.filter(isMathSheet);
+if (mathSheets.length !== 1) {
+  throw new Error(`${xlsxPath}: expected exactly one sheet with a "Symbols" header in row 1, found ${mathSheets.length}` +
+    ` (sheets: ${wb.worksheets.map((w) => w.name).join(', ')})`);
+}
+const ws = mathSheets[0];
 
 function cell(row: number, col: number): Cell {
   const v = ws.getCell(row, col).value;

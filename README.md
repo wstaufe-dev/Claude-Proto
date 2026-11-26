@@ -29,7 +29,61 @@ npm run build               # static build in dist/
 The simulator prints return by source, with exact base-game figures alongside
 for comparison, plus trigger frequencies, Hold & Spin statistics, volatility
 and the win distribution. It writes the full report to `reports/` (ignored by
-git). Results are reproducible for a given `(seed, workers, rounds)`.
+git). Results are reproducible for a given `(seed, workers, rounds)`. It also
+writes the same report as tab-delimited text (`reports/sim-….txt`, copied to
+`reports/sim-latest.txt`) for the Excel import.
+
+## Windows tools (no command line)
+
+Double-click files in the project folder:
+
+| File | What it does |
+|---|---|
+| `Setup.bat` | One time (and after updating the project): checks Node.js and installs packages. |
+| `Play Prototype.bat` | Starts the game and opens it in your browser. Keep its window open while playing; close it to stop. |
+| `Run Simulation.bat` | Asks for rounds and seed, then simulates the exported math. |
+
+Buttons on the workbook's **Tools** tab:
+
+| Button | What it does |
+|---|---|
+| Export Math Config | Saves the workbook and writes `math/proto_v2.config.json`. A running prototype reloads by itself. |
+| Import Sim Results | Loads `reports/sim-latest.txt` into the **Sim Results** tab. |
+| Import Other Results… | Loads an older report you pick from `reports/`. |
+
+Typical loop: edit the math → **Export Math Config** → `Run Simulation.bat` →
+**Import Sim Results** → `Play Prototype.bat`.
+
+### First-time setup
+
+1. Install Node.js (LTS) from https://nodejs.org with the default options.
+2. **Before extracting a downloaded zip**, right-click it → Properties →
+   tick **Unblock** → OK. Otherwise Windows warns about the `.bat` files and
+   Excel blocks the macros.
+3. Prefer a folder outside OneDrive (e.g. `C:\work\Claude-Proto`). OneDrive
+   slows down `npm install` and can lock files.
+4. Double-click `Setup.bat`.
+
+### Adding the macros to the workbook (once)
+
+The macro code lives in `tools/excel/ProtoTools.bas`, so changes to it can be
+reviewed in git. To add it to the workbook:
+
+1. Open `math/Proto_v2.xlsx` in Excel.
+2. Press **Alt+F11** to open the VBA editor → **File → Import File…** →
+   choose `tools\excel\ProtoTools.bas`. Close the VBA editor.
+3. Press **Alt+F8**, choose **InstallToolButtons**, click **Run**. This adds
+   the **Tools** tab with the buttons.
+4. **File → Save As** → type **Excel Macro-Enabled Workbook (*.xlsm)** →
+   save as `math/Proto_v2.xlsm`.
+5. Commit `Proto_v2.xlsm` and delete `Proto_v2.xlsx`, so there's one
+   workbook. The exporter uses the `.xlsm` whenever it exists.
+
+If Excel shows "Microsoft has blocked macros", unblock the file (step 2 of
+the first-time setup) or add the project folder under **File → Options →
+Trust Center → Trust Center Settings → Trusted Locations**. The exporter
+finds the math by its `Symbols` header, so the Tools and Sim Results tabs can
+be in any order.
 
 ## Engine contract
 
