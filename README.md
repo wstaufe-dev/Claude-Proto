@@ -42,6 +42,7 @@ Double-click files in the project folder:
 | `Setup.bat` | One time (and after updating the project): checks Node.js and installs packages. |
 | `Play Prototype.bat` | Starts the game and opens it in your browser. Keep its window open while playing; close it to stop. |
 | `Run Simulation.bat` | Asks for rounds and seed, then simulates the exported math. |
+| `Install Excel Tools.bat` | Adds (or refreshes) the macros and the Tools and Sim Results tabs in the workbook. Close Excel first. |
 
 Buttons on the workbook's **Tools** tab:
 
@@ -67,7 +68,16 @@ Typical loop: edit the math → **Export Math Config** → `Run Simulation.bat` 
 ### Adding the macros to the workbook (once)
 
 The macro code lives in `tools/excel/ProtoTools.bas`, so changes to it can be
-reviewed in git. To add it to the workbook:
+reviewed in git.
+
+**Automatic:** close Excel and double-click `Install Excel Tools.bat`. It
+opens the workbook in a hidden Excel, imports the macros, adds the **Tools**
+and **Sim Results** tabs, and saves `math/Proto_v2.xlsm`. It needs Excel's
+"Trust access to the VBA project object model" setting; if that is off, it
+offers to turn it on only while it runs. Run it again after `ProtoTools.bas`
+changes to refresh the macros in the `.xlsm`. Then do step 5 below.
+
+**By hand:**
 
 1. Open `math/Proto_v2.xlsx` in Excel.
 2. Press **Alt+F11** to open the VBA editor → **File → Import File…** →

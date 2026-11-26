@@ -26,6 +26,6 @@ Do this without being asked, and tell the user it was republished.
   tool macros (source: `tools/excel/ProtoTools.bas`). Edit it only with a tool
   that keeps the VBA project (e.g. openpyxl with `keep_vba=True`); ExcelJS
   drops macros, so never write the workbook back with ExcelJS.
-- `Setup.bat`, `Play Prototype.bat`, `Run Simulation.bat` and the `.bas` file
-  must keep CRLF line endings (`.gitattributes` marks them `-text`).
+- The `.bat`, `.bas` and `.ps1` files must keep CRLF line endings
+  (`.gitattributes` marks them `-text`).
 - All award logic belongs in `src/engine/`; `web/` only animates engine events.
