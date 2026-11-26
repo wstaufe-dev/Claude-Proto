@@ -1,140 +1,196 @@
 # Research: Spooky Link Yo Yeti and its Mo Mummy roots
 
-Gathered 2026-11-26 from web search results only.
+Gathered 2026-11-26. **Round 1** used web search summaries only. **Round 2**
+(same day) read the pages themselves after the session moved to an
+environment with those sites allowed. Section 8 lists what round 2 changed.
 
-**Limits of this research.** This cloud session could not open web pages: the
-environment's network policy blocked every site we tried, including
-aristocratgaming.com, casinos.com, slotcatalog.com, fanduel.com and
-youtube.com. No YouTube video was watched; only video titles and descriptions
-from search results were seen. Everything below comes from search-result
-summaries of those pages. Sources often disagree, and land-based and online
-versions differ. Treat it as a guide to the mechanic's structure, not as exact
-rules. The machine's own help screens would settle the details.
+**Limits.** No video was watched. YouTube sends this cloud machine to a
+Google "unusual traffic" check, and video footage can't be read anyway, so
+only video titles were seen. SlotCatalog, Slots Temple and Hard Rock Bet
+refused automated reading (403), and Flip The Switch was down (502). Their
+details below still come from search summaries. Land-based and online
+versions differ. The machine's own help screens would settle the details.
 
-Confidence: **High** = several sources agree, including Aristocrat's own page.
-**Medium** = one or two sources, or some disagreement. **Low** = one source,
-or contradicted elsewhere.
+Confidence: **High** = Aristocrat's own page, or several sources agree.
+**Medium** = one good source, or minor disagreement. **Low** = one source
+seen only as a search summary, or contradicted elsewhere.
 
 ---
 
 ## 1. Product family
 
-- **Spooky Link** is an Aristocrat land-based family on the King Max cabinet.
-  Three base titles: **Go Ghost**, **Mo' Mummy** and **Yo Yeti**. (High)
-- Each title has **three pots** shown above the reels and a **Cash Collect**
-  bonus. Reviewers say the bonus drops when at least one pot "pops". (Medium:
-  casinos.com review)
-- A later **Spooky Link Grand** version adds a Spooky Grand Chance symbol and
-  a multi-site Spooky Grand progressive that resets at $50,000. It is not part
-  of our scope. (High)
-- **Spooky Link: Go Ghost** was released online and has the most detailed
-  public rules. Yo Yeti appears to share the same core structure. (Medium)
+- **Spooky Link** is an Aristocrat land-based "three-pot collection game".
+  Three base titles: **Go Ghost**, **Mo' Mummy** and **Yo Yeti**. GambleMap
+  dates Yo Yeti's launch to 17 March 2025. (High)
+- Aristocrat's own description of Yo Yeti: "Featuring Mo Mummy's Free Games
+  and Jackpot, this levels up the ante with its signature Cash Collect
+  feature. Yo Yeti pops up at random to lob snowballs into the reels for
+  your chance at credit prizes, jackpots, and more spin!" (High)
+- Later family members: **Spooky Link Grand** (King Max cabinet, Spooky
+  Grand Chance diamond, $50,000 multi-site progressive) and a second wave
+  (Wo' Wolfie, So Scary, Mo' Magic). Neither is in our scope. (High)
+- **Spooky Link: Go Ghost** is the online version. Its rules differ from the
+  land-based one in places (see §5). (High)
 
 ## 2. Base game
 
-- 5 reels × 3 rows. Paylines are reported as 25, 40 or 10, depending on the
-  source and version. (Low; not needed for our design)
-- Wilds substitute for regular pay symbols. (High)
-- **3+ Free Games symbols award 6 free spins.** (Medium, from the online Go
-  Ghost)
-- A separate **Jackpot pick feature**, triggered at random (by wilds online):
-  pick from 15 symbols until three matching jackpots are found. It is carried
-  over from Mo Mummy. (Medium)
-- Reported jackpots: Mini, Minor, Major, Mega and Grand (Mega, Major and Grand
-  are progressive on some machines). Counts vary from five to six between
-  sources. (Low)
+- 5 reels × 3 rows. Lines vary by version and denomination: 5, 25, 40 or
+  50. (High that it varies; not needed for our design)
+- Wilds substitute for regular pay symbols. A wild can randomly trigger the
+  Jackpot feature. (High)
+- **Five bonus features in all:** Jackpot, Free Games, Mo' Spins,
+  Mo' Symbols, and the title's own character feature (Yo Yeti here).
+  The last three are the pots. (High: casinos.com)
+- **Free Games** (Yo Yeti uses the original Mo Mummy version): all royal
+  symbols are removed from the reel strips so only the highest pays remain.
+  Reviewers rate it the weakest feature. The Cash Collect bonus can trigger
+  during free games. (High)
+- **Jackpot feature:** "players pick from 15 symbols until they match
+  3 jackpots or bonus prizes to win." (High)
+- **Jackpots:** fixed Mini and Minor (set by denomination); progressive
+  Mega, Major and Grand on land-based machines (casinos.com). Other sources
+  name Maxi instead of Mega. The online Go Ghost has Grand, Major, Maxi,
+  Minor and Mini, none progressive. (Medium)
+- Reported land-based stats for Spooky Link Grand: hit frequency 28.09%,
+  RTP 89.2%–91.2%. Reviewers call line pays weak and volatility high; the
+  value is in the pots. (Medium)
 
-## 3. Cash Collect trigger
+## 3. Pots and the Cash Collect trigger
 
-- **Collector character on reel 1 plus a coloured gem on reels 2–5** triggers
-  Cash Collect with that gem's modifier. (High for Go Ghost and Mo Mummy)
-- **Gems without the character** can still trigger their feature at random.
-  (Medium)
-- The gem colour picks the modifier, and several modifiers can trigger
-  together. Mo Mo Mo Mummy advertises "seven combinations": each of the 3
-  modifiers alone, any 2, or all 3. (High)
-- On the land-based Spooky Link, gems feed the **three pots** above the reels.
-  When a pot pops, its modifier joins the bonus. YouTube titles such as
-  "Double Pop" and "All 3 Bonuses" show that more than one pot can pop on the
-  same trigger. (Medium; exact fill and pop rules unknown)
-- When the feature starts, every gem from the triggering spin becomes a
-  **diamond** holding the same prize. (Medium)
+- Three large gem piles ("pots") sit above the reels, shaped to the theme
+  (Buddha statues, sarcophagi or suits of armour). Each pot has a colour
+  and a feature. (High)
+- **Three ways to trigger**, per casinos.com (High):
+  1. A gem of a pot's colour lands, "shoots up" into its pot and triggers it.
+  2. A "luck has arrived" style anticipation animation plays first.
+  3. The character lands on **reel 1**. "Get them with any gems, and you
+     will trigger the corresponding feature." The character plus a gem of a
+     colour triggers that colour's pot.
+- Gems landing without the character can still trigger their feature at
+  random. In Mo Mummy this is called a "metamorphic" trigger. (High)
+- **Several pots can pop at once** ("double pop", "triple pop"). Players
+  chase these. (High)
+- The pots' fill level is "perceived, not actual" in casinos.com's words:
+  they glow and pulse, but there is no evidence that a pot meter carries
+  state between spins. (Medium)
+- When the feature starts, the triggering gems become **diamonds** with the
+  same prizes (online Go Ghost). (Medium)
 
-## 4. Cash Collect bonus (Mo Mummy core)
+## 4. Cash Collect bonus core (Mo Mummy)
 
-- Plays on a **5 × 5 grid** with **5 spins** to start. (Medium; spin counts
-  differ by version)
-- The collector is a **2 × 2 block** that moves over the grid. It collects
-  every coin (credit prize) and diamond under it. (High)
-- **Growth by diamonds** (Mo Mummy, Mighty Pyramid), per Flip The Switch:
-  - 5 diamonds: grows to **3 × 3**, **+3 spins**
-  - 4 more (9 in all): grows to **4 × 4**, **+2 spins**
-  - 3 more (12 in all): grows to **5 × 5**, **+1 spin**
-  - No more growth spins once at 5 × 5. (Medium)
-- Coins and diamonds hold credit prizes (reported 1×–1,000× bet) or the Mini or
-  Minor jackpot. Larger jackpots come from the pick feature. (Medium)
-- **Everything collected is paid when the spin counter reaches 0.** (High)
-- Whether spins reset when something lands (as in Hold & Spin) is **not
-  stated anywhere**. The descriptions read as a fixed counter that only grows
-  through awards. (Unknown)
+From SweepsKings' Mo Mummy guide, casinos.com and FanDuel (High unless
+marked):
 
-## 5. The three modifiers
+- The screen expands to the collect grid and the character comes alive
+  "inside a box": the **collector zone**, starting at **2 × 2**.
+- **5 spins** to start.
+- Each spin drops **coins** and **diamonds** (Mo Mummy calls them green
+  gems) onto the grid. Both carry credit prizes or a jackpot (Mini, Minor
+  or Major).
+- **Coins must land inside the zone** to be collected.
+- **Diamonds are collected wherever they land.** The character moves to
+  each one to collect it.
+- Each collected diamond is added to the total and "thrown onto a power-up
+  bar". Filling the bar grows the zone and adds spins:
 
-Mo Mo Mo Mummy and Spooky Link: Go Ghost use the same modifier set, with the
-third one renamed per character:
+  | Power-up | Zone | Spins added | Diamonds needed (Flip The Switch) |
+  |---|---|---|---|
+  | 1st | 3 × 3 | +3 | 5 |
+  | 2nd | 4 × 4 | +2 | 4 more (9 total) |
+  | 3rd | 5 × 5 | +1 | 3 more (12 total) |
 
-| Gem / pot colour | Modifier | What it does | Confidence |
-|---|---|---|---|
-| Green | **Mo' Spins** | "+1 Spin", "+2 Spins" or "+3 Spins" tags land on coins or diamonds. Collecting a tagged symbol adds those spins. | High |
-| Blue | **Mo' Symbols** | A position can land with **two** prizes (two coins or two diamonds), so there is more to collect and diamonds count faster. | High |
-| Red (Go Ghost), pink (Mummy) | **Mo' Rows** / **Go Ghost** | The grid grows from **5 × 5 to 8 × 5**, giving the collector more room. The collector keeps growing with diamonds and can cover the whole 8 × 5 grid. | Medium (grid size reported as "8 × 5" and as "up to 8 high") |
+  Zone sizes and spins: High. Diamond counts: Medium (one source).
+- **Everything collected is paid when the spins run out.**
+- No source mentions spins resetting when a prize lands. The counter only
+  goes up through power-ups and Mo' Spins. (Medium)
+- Prize range reported for Mo Mummy Mighty Pyramid: 1×–1,000× bet. (Low)
 
-## 6. What Yo Yeti adds
+## 5. The three pots in the Yo Yeti title
 
-- Aristocrat's own wording: in the Yo Yeti feature, "the Yeti character
-  randomly appears and throws snowballs into the reels that turn into credit
-  prizes, jackpots, and +1 spin prizes." (High)
-- In the Grand version the snowballs can turn into diamonds, credits or more
-  spins. (High)
-- It is a **random event during Cash Collect**: the Yeti appears and adds
-  prizes to the grid. (High)
-- **Not confirmed:** whether "Yo Yeti" is the third pot in the Yo Yeti title
-  (taking the place of Mo' Rows / Go Ghost), or whether the Yeti throw is an
-  extra always available on top of three pots. The Go Ghost online game, where
-  the third pot is named after the character, suggests the first reading.
-- One Aristocrat blurb for Spooky Link Grand describes the three characters as
-  modifiers in their own right: "Go Ghost will randomly boost your credit
-  value, Mo Mummy randomly awards 2x and 3x multipliers, and Yo Yeti throws
-  snowballs into your reels." This may describe the Grand version's shared
-  bonus rather than the base Yo Yeti title. (Medium; conflicts with section 5)
+GGB Magazine settles which pots each title has: "Each base game includes
+Mo' Spins and Mo' Symbols … The third enhancement is unique to the base
+game." Casinos.com agrees. (High)
 
-## 7. Presentation (from descriptions and video titles)
+| Pot | Effect | Confidence |
+|---|---|---|
+| **Mo' Spins** | "Additional spins can land on the reels through the bonus." Diamonds (and coins in Mo Mo Mo Mummy) can show a +1 Spin tag; collecting one adds a spin. Search summaries mention +2 and +3 tags in some versions. | High (+1), Low (+2/+3) |
+| **Mo' Symbols** | "Split symbols": a cell can hold two prizes, "so you can get double diamonds on double values". | High |
+| **Yo Yeti** | "The Yeti character randomly appears and throws snowballs into the reels that turn into credit prizes, jackpots, and +1 spin prizes." | High |
 
-- Three large pots above the reels, shaped to the theme (Buddha statues,
-  sarcophagi or suits of armour, depending on the title). Gems landing in the
-  base game fly up into the matching pot.
-- The bonus screen switches to the larger collect grid. The collector block
-  slides over the grid, gathering coins, and visibly grows at each diamond
-  threshold.
-- Character "eyes open" on the pots are talked about by players as a sign
-  something is due. It is presentation only; the game is random. (Low)
+The other titles' third pots, for comparison (High):
+
+- **Mo' Mummy:** randomly applies a 2× or 3× multiplier to the box for a
+  single spin.
+- **Go Ghost (land-based):** "boosts" credit values as they land. Online it
+  adds 1×–50× bet to one or more diamonds after a spin.
+- **Mo' Rows** (Mo Mo Mo Mummy only): extra rows on the collect grid.
+  Online Go Ghost folds this into its red pot (board grows to 8 × 5). Not
+  part of land-based Yo Yeti.
+
+## 6. Yo Yeti snowballs: what is and isn't known
+
+- Known (High): it happens at random during Cash Collect, only when the
+  Yo Yeti pot popped; the Yeti appears and throws snowballs; each snowball
+  becomes a credit prize, a jackpot or a +1 spin prize. In the Grand
+  version, snowballs can also become diamonds.
+- GambleMap's wording: snowballs "explode into credit prizes, jackpots, and
+  +1 spin prizes when they hit the reels". (Medium)
+- Not known: how often the Yeti appears, how many snowballs he throws,
+  whether snowball prizes must be in the zone to be collected, and whether
+  they count towards power-ups.
+
+## 7. Presentation
+
+- Base game: three character pots above the reels, with the jackpot meters
+  across the top. Gems fly up into the pot of their colour. Pots glow and
+  pulse when "close". (High)
+- Each character has a strong personality with voice lines: the Yeti is
+  cheerful but needy ("doesn't have many friends" when you cash out).
+  (High: casinos.com)
+- Bonus: the screen expands, the character sits in his box, coins and
+  diamonds drop each spin, the character walks out to grab diamonds, and
+  diamonds go up to a power-up bar beside the grid. The box visibly grows at
+  each power-up. (High)
+- Players claim the characters' eyes opening means a bonus is due. It is
+  presentation only. (Low)
+
+## 8. What round 2 changed
+
+- **Third pot settled:** the Yo Yeti title's pots are Mo' Spins,
+  Mo' Symbols and Yo Yeti. There is no Mo' Rows pot.
+- **Collection rule corrected:** coins count only inside the zone; diamonds
+  count anywhere (the character walks to them). Round 1 assumed both had to
+  be under the zone.
+- **Power-up bar:** diamond progress is shown as a bar outside the grid.
+- **Free games:** Yo Yeti uses the original Mo Mummy free games (royals
+  removed), not the Mo' Mummy title's wheel-multiplier version.
+- **Trigger:** the character on reel 1 plus a gem triggers that gem's pot;
+  gems alone can trigger at random; anticipation animation is part of it.
 
 ## Sources
 
-- [Aristocrat: Spooky Link](https://www.aristocratgaming.com/us/games/us-spooky-link)
+Read in full (round 2):
+
 - [Aristocrat: Yo Yeti](https://www.aristocratgaming.com/us/games/us-yo-yeti)
+- [Aristocrat: Spooky Link](https://www.aristocratgaming.com/us/games/us-spooky-link)
+- [Aristocrat: Mo Mummy (Spooky Link family page)](https://www.aristocratgaming.com/us/games/us-mummy)
 - [Aristocrat: Yo Yeti Grand](https://www.aristocratgaming.com/us/games/us-yo-yeti-grand)
-- [Aristocrat: Mo Mo Mo Mummy](https://www.aristocratgaming.com/us/slots/game-groups/mo-mo-mo-mummy)
-- [Aristocrat: Mo Mummy](https://www.aristocratgaming.com/us/games/us-mummy)
+- [Aristocrat: Mo Mo Mo Mummy](https://www.aristocratgaming.com/us/games/us-mo-mo-mo-mummy)
+- [GGB Magazine: Spooky Link Grand](https://ggbmagazine.com/articles/spooky-link-grand/)
 - [Casinos.com: Spooky Link review](https://www.casinos.com/slots/spooky-link)
+- [SweepsKings: Mo Mummy guide](https://sweepskings.com/sweepstakes-casinos/slots/mo-mummy/)
+- [FanDuel: Spooky Link Go Ghost spotlight](https://www.fanduel.com/research/new-casino-games-spotlight-spooky-link-go-ghost)
+- [Royal River Casino: Mo Mo Mo Mummy](https://www.royalrivercasino.com/blog/how-to-play-mo-mo-mo-mummy-slot-machine)
+- [GambleMap: Spooky Link Yo Yeti](https://gamblemap.com/slot/spooky-link-yo-yeti)
+- [Casinos.com: Mo Mummy review](https://www.casinos.com/slots/mo-mummy) (little rule detail)
+
+Search summaries only (pages refused automated reading or were down):
+
 - [SlotCatalog: Spooky Link](https://slotcatalog.com/en/slots/spooky-link)
 - [SlotCatalog: Mo Mummy Mighty Pyramid](https://slotcatalog.com/en/slots/mo-mummy-mighty-pyramid)
 - [Flip The Switch: Mo' Mummy Mighty Pyramid](https://fliptheswitch.com/game/mo-mummy-mighty-pyramid/)
-- [FanDuel: Spooky Link Go Ghost spotlight](https://www.fanduel.com/research/new-casino-games-spotlight-spooky-link-go-ghost)
 - [Hard Rock Bet: Spooky Link Go Ghost](https://www.hardrock.bet/news/spooky-link-go-ghost-online-casino-slot-now-live/)
-- [OLG: Spooky Link Go Ghost](https://www.olg.ca/en/casino/play-spooky-link-go-ghost.html)
-- [Royal River Casino: Mo Mo Mo Mummy](https://www.royalrivercasino.com/blog/how-to-play-mo-mo-mo-mummy-slot-machine)
-- [GGB Magazine: Spooky Link Grand](https://ggbmagazine.com/articles/spooky-link-grand/)
+- [Slots Temple: Mo Mo Mo Mummy Midnight Treasures](https://www.slotstemple.com/slots/mo-mo-mo-mummy-midnight-treasures/)
 - [Yogonet: Spooky Link Grand debut](https://www.yogonet.com/international/news/2026/02/25/117744-aristocrat-debuts-spooky-link-grand-on-king-max-cabinet-at-mohegan-sun)
 - YouTube (titles only, not watched): [Yo Yeti Bonus Hunt: Double Pop](https://www.youtube.com/watch?v=9U15QnfU6ZY),
   [Yo Yeti All 3 Bonuses & Full Screen](https://www.youtube.com/watch?v=VtFAODA0UWg),
